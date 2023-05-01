@@ -1,0 +1,126 @@
+import { useState, useEffect, useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import logo from './logo.svg';
+import Home from './pages/Home';
+import SearchPage from './pages/Search';
+import './App.css';
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Snackbar,
+  TextField,
+} from '@mui/material';
+import {
+  Nav,
+  Title,
+  Body,
+  H1,
+  H2,
+  H3,
+  Main,
+  List,
+  StyledInput,
+} from './styles/indexStyles';
+import Serie from './Components/serie';
+import {
+  AddRounded,
+  ListAltRounded,
+  OpenInBrowser,
+  PlusOneRounded,
+  RotateLeftRounded,
+  SearchRounded,
+} from '@mui/icons-material';
+
+//Alert
+import { Alert, AlertTitle } from '@mui/material';
+
+//Context
+import Cookies from 'js-cookie';
+import { Store } from './Store';
+import { SeriePage } from './pages/SeriePage';
+
+
+
+
+function App() {
+  //contexts
+  const { state, dispatch } = useContext(Store);
+  const { series, peso, dialog } = state;
+  const date = new Date();
+  const { title, message, severity } = dialog;
+  const [alert, setAlert] = useState(false);
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlert(false);
+  };
+
+  //modal
+  const [isOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  return (
+    <Body>
+      <Router>
+        <Nav>
+          <Title>App de treino</Title>
+          <ul>
+            <li>
+              <Link to="/search">
+                <IconButton>
+                  <SearchRounded />
+                </IconButton>
+              </Link>
+            </li>
+            <li>
+              <Link to="/">
+                <IconButton>
+                  <ListAltRounded />
+                </IconButton>
+              </Link>
+            </li>
+          </ul>
+        </Nav>
+        <Main>
+          <Routes>
+            <Route path="/" element={<Home setAlert={setAlert} />}></Route>
+            <Route
+              path="/search"
+              element={<SearchPage setAlert={setAlert} />}
+            ></Route>
+
+            <Route
+              path="/serie/:serieId"
+              element={<SeriePage series={series} setAlert={setAlert} />}
+            ></Route>
+          </Routes>
+        </Main>
+
+        <Snackbar open={alert} autoHideDuration={4000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity={severity}>
+            <AlertTitle>{title}</AlertTitle>
+            {message}
+          </Alert>
+        </Snackbar>
+      </Router>
+    </Body>
+  );
+}
+
+export default App;
