@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { H1, H2, P } from '../styles/indexStyles';
+import { H1, H2, List, P } from '../styles/indexStyles';
 import {
   Button,
   IconButton,
@@ -20,24 +20,16 @@ import {
 import { Store } from '../Store';
 import Serie from '../Components/serie';
 import Exercises from '../Components/Exercises';
+import ModalWindow from '../Components/Modal';
+import TitleForm from '../Components/TitleForm';
+import AddForm from '../Components/AddForm';
 
-//modal
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 export const SeriePage = ({ setAlert }) => {
   //params
   const params = useParams();
   const id = params.serieId;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //serie
   const { state, dispatch } = useContext(Store);
@@ -45,52 +37,28 @@ export const SeriePage = ({ setAlert }) => {
   const serie = series.filter((obj) => obj.id == id)[0];
   console.log(serie);
 
-  //modal
+  //Title modal
   const [isOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
-  //Edit
-  const [title, setTitle] = useState(serie.title);
-  const [name, setName] = useState(serie.name);
-  const changeTitle = (e) => {
-    e.preventDefault();
-    setAlert(false);
-    closeModal();
-    dispatch({
-      type: 'EDITAR_SERIE',
-      payload: {
-        id: serie.id,
-        name: name.toUpperCase(),
-        title: title,
-        exercises: serie.exercises,
-      },
-    });
-    setAlert(true);
-  };
-  const deleteSerie = () => {
-    setAlert(false);
-    const sure = window.confirm('Tem certeza?');
-    closeModal();
-    if (sure) {
-      setAlert(true);
-      navigate('/');
-      dispatch({ type: 'DELETAR_SERIE', payload: serie });
-    }
-  };
+  //Add modal
+  const [adding, setAdding] = useState(false);
+  const openAddModal = () => setAdding(true);
+  const closeAddModal = () => setAdding(false);
 
   //add exercise
-  const [isAddOpen, setAddOpen] = useState(false)
+  const [isAddOpen, setAddOpen] = useState(false);
   const [img, setImg] = useState(
     'https://www.mundoboaforma.com.br/wp-content/uploads/2020/12/supino-inclinado-com-halteres.gif'
   );
-  const [exerciseName, setExerciseName] = useState('')
+  const [exerciseName, setExerciseName] = useState('');
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState(12);
 
   const addExercise = () => {
-    alert(exerciseName)
-  }
+    alert(exerciseName);
+  };
 
   return (
     <>
@@ -115,53 +83,30 @@ export const SeriePage = ({ setAlert }) => {
           <EditNoteRounded />
         </IconButton>
       </p>
-      <Button variant="outlined" color="primary">
+      <Button variant="outlined" color="primary" onClick={openAddModal}>
         <AddRounded />
       </Button>
-      <ul>
+      <List>
         {serie.exercises.map((exercise) => (
-          <Exercises serie={exercise} />
+          <Exercises exercise={exercise} />
         ))}
-      </ul>
+      </List>
 
-      <Modal
-        open={isOpen}
-        onClose={closeModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <form onSubmit={changeTitle}>
-            <TextField
-              label="Nome da série"
-              defaultValue={name}
-              onChange={(e) => setName(e.target.value.toUpperCase())}
-              variant="filled"
-              color="primary"
-              sx={{ textTransform: 'capitalize' }}
-            />
-            <TextField
-              label="Título da série"
-              defaultValue={title}
-              onChange={(e) => setTitle(e.target.value)}
-              variant="filled"
-              color="primary"
-            />
-            <p style={{ display: 'flex', justifyItems: 'end' }}>
-              <Button variant="contained" color="primary" type="submit">
-                Salvar
-              </Button>
-              <Button variant="contained" color="info" onClick={closeModal}>
-                <CancelRounded /> Cancelar
-              </Button>
-              <Button variant="contained" color="warning" onClick={deleteSerie}>
-                <DeleteRounded /> Excluir série
-              </Button>
-            </p>
-          </form>
-        </Box>
-      </Modal>
+      <ModalWindow isOpen={isOpen} closeModal={closeModal}>
+        <TitleForm
+          closeModal={closeModal}
+          serie={serie}
+          setAlert={setAlert}
+        />
+      </ModalWindow>
 
+      <ModalWindow isOpen={adding} closeModal={closeAddModal}>
+        <AddForm 
+        serie={serie}
+        setAlert={setAlert}
+        closeAddModal={closeAddModal}
+        />
+      </ModalWindow>
     </>
   );
 };

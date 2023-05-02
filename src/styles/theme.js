@@ -11,6 +11,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           margin: '5px',
+          '& type:number': {
+            background: 'red',
+          },
         },
       },
     },

@@ -125,12 +125,47 @@ function Reducer(state, action) {
         },
       };
 
+    case 'ADD_EXERCISE':
+      const payload = action.payload;
+      const stateSeries = state.series;
+      const newE = {
+        gifUrl: payload.gifUrl,
+        name: payload.name,
+        sets: payload.sets,
+        reps: payload.reps,
+        video: payload.video,
+        obs: payload.obs,
+        order: payload.order,
+      };
+
+      const newArrSeries = stateSeries.map((serie) => {
+        if (serie.id === payload.id) {
+          serie.exercises = [...serie.exercises, newE];
+
+          return serie;
+        }
+        return serie;
+      });
+
+      Cookies.set('series', JSON.stringify(newArrSeries));
+      return {
+        ...state,
+        series: newArrSeries,
+        dialog: {
+          title: 'Novo exercício adicionado!',
+          message: `${newE.title} à serie!`,
+          severety: 'success',
+        },
+      };
+
     case 'EDITAR_SERIE':
       const edited = action.payload;
       const series = state.series;
       const editedSeries = series.map((serie) => {
         if (serie.id == edited.id) {
-          return edited;
+          serie.name = edited.name;
+          serie.title = edited.title;
+          return serie;
         }
         return serie;
       });
@@ -163,6 +198,7 @@ function Reducer(state, action) {
           open: true,
         },
       };
+
     default:
       return state;
   }

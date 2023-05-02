@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Box, Button, IconButton, Modal, TextField } from '@mui/material';
+import { Box, Button, IconButton, InputAdornment, Modal, TextField } from '@mui/material';
 import { H1, H2, H3, List, StyledInput } from '../styles/indexStyles';
 import Serie from '../Components/serie';
 import {
@@ -21,8 +21,8 @@ function Home({ setAlert }) {
   //contexts
   const { state, dispatch } = useContext(Store);
   const { series, peso, weightHistory } = state;
-    console.log(weightHistory);
-    const date = new Date();
+  console.log(weightHistory);
+  const date = new Date();
   const [getSeries, setSeries] = useState(series);
   const [getPeso, setPeso] = useState(peso.new);
 
@@ -44,7 +44,12 @@ function Home({ setAlert }) {
     setSeries(series);
     closeModal();
     setTitle('');
-    setName(arr[series.length + 1])
+    try{
+      
+    setName(arr[series.length + 1]);
+    } catch (e){
+      console.log(e);
+    }
   };
 
   const apagarCookies = () => {
@@ -62,17 +67,20 @@ function Home({ setAlert }) {
 
   const updatePeso = (e) => {
     e.preventDefault();
-    setAlert(false);
-    if (peso.new === getPeso) return;
-    if (getPeso === NaN || getPeso === null) return;
-    dispatch({ type: 'UPDATE_PESO', payload: getPeso });
-    setAlert(true);
-    console.log(weightHistory);
+    if (peso.new != getPeso) {
+      try {
+        dispatch({ type: 'UPDATE_PESO', payload: getPeso });
+        setAlert(true);
+        console.log(weightHistory);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   //Create serie
   const [title, setTitle] = useState('');
-  const [name, setName] = useState(arr[getSeries.length]);
+  const [name, setName] = useState(arr[series.length]);
   //modal
   const [isOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
@@ -91,19 +99,24 @@ function Home({ setAlert }) {
   return (
     <>
       <H1>Treino</H1>
-      <H3>
-        <TextField variant='filled' color='secondary' defaultValue={getPeso}
-          onChange={handleChangePeso}
-          onBlur={updatePeso}
-          onSubmit={updatePeso}
-          label='Peso (Kg)'
-          sx={{
-            width: '100px',
-          }}
+      <form onSubmit={updatePeso} style={{width: '100%', textAlign: 'right', color: 'black'}}>
+          <TextField
+            variant="filled"
+            color="secondary"
+            defaultValue={getPeso}
+            onChange={handleChangePeso}
+            onBlur={updatePeso}
+            onSubmit={updatePeso}
+            label="Peso"
+            sx={{
+              width: '100px',
+            }}
+            InputProps={{
+              endAdornment: <InputAdornment position='end'>Kg</InputAdornment>
+            }}
           />
-          
-      </H3>
-      <H3>{peso.msg}</H3>
+        <p style={{marginTop: '3px'}}>{peso.msg}</p>
+      </form>
 
       <br />
       <List>
