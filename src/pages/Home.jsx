@@ -26,9 +26,6 @@ function Home({ setAlert }) {
   const [getSeries, setSeries] = useState(series);
   const [getPeso, setPeso] = useState(peso.new);
 
-  useEffect(() => {
-    setSeries(Cookies.get('series'));
-  }, []);
 
   let arr = 'a b c d e f g h i j l m n';
   arr = arr.toUpperCase();

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { H1, H2, List, P } from '../styles/indexStyles';
 import {
@@ -8,6 +8,9 @@ import {
   Box,
   Typography,
   TextField,
+  Tabs,
+  Tab,
+  AppBar,
 } from '@mui/material';
 import {
   AddRounded,
@@ -23,7 +26,8 @@ import Exercises from '../Components/Exercises';
 import ModalWindow from '../Components/Modal';
 import TitleForm from '../Components/TitleForm';
 import AddForm from '../Components/AddForm';
-
+import PropTypes from 'prop-types';
+import { Exercise } from '../styles/seriePage';
 
 export const SeriePage = ({ setAlert }) => {
   //params
@@ -33,10 +37,12 @@ export const SeriePage = ({ setAlert }) => {
 
   //serie
   const { state, dispatch } = useContext(Store);
-  const { series } = state;
-  const serie = series.filter((obj) => obj.id == id)[0];
+  const { exercises, series } = state;
+  const [serie, setSerie] = useState(
+    series.filter((serie) => (serie.id = id))[0]
+  );
+  console.clear();
   console.log(serie);
-
   //Title modal
   const [isOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
@@ -56,9 +62,51 @@ export const SeriePage = ({ setAlert }) => {
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState(12);
 
-  const addExercise = () => {
-    alert(exerciseName);
+  const addToSerie = (name) => {
+    alert(name);
   };
+
+  //modal tabs
+  const [value, setValue] = useState(0);
+  const changeTab = (event, newValue) => setValue(newValue);
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        sx={{ textTransform: 'none !important' }}
+        {...other}
+      >
+        {value === index && (
+          <Box
+            sx={{
+              p: 3,
+              textTransform: 'none !important',
+            }}
+          >
+            {children}
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
 
   return (
     <>
@@ -84,28 +132,100 @@ export const SeriePage = ({ setAlert }) => {
         </IconButton>
       </p>
       <Button variant="outlined" color="primary" onClick={openAddModal}>
-        <AddRounded />
+        <AddRounded /> Adicionar exercício
       </Button>
       <List>
         {serie.exercises.map((exercise) => (
-          <Exercises exercise={exercise} />
+          <Exercises
+            exercise={exercise}
+            setAlert={setAlert}
+            dispatch={dispatch}
+            serie={serie}
+            closeAddModal={closeAddModal}
+          />
         ))}
       </List>
 
       <ModalWindow isOpen={isOpen} closeModal={closeModal}>
-        <TitleForm
-          closeModal={closeModal}
-          serie={serie}
-          setAlert={setAlert}
-        />
+        <TitleForm closeModal={closeModal} serie={serie} setAlert={setAlert} />
       </ModalWindow>
 
       <ModalWindow isOpen={adding} closeModal={closeAddModal}>
-        <AddForm 
-        serie={serie}
-        setAlert={setAlert}
-        closeAddModal={closeAddModal}
-        />
+        <Box
+          sx={{ borderBottom: 1, borderColor: 'divider' }}
+          id="modal-modal-title"
+        >
+          <Tabs
+            value={value}
+            onChange={changeTab}
+            aria-label="basic tabs example"
+            sx={{ width: 'max-content' }}
+          >
+            <Tab
+              label="Novo exercicio"
+              sx={{ textTransform: 'none !important' }}
+              {...a11yProps(1)}
+            />
+            <Tab
+              label="Adicionar da lista"
+              sx={{ textTransform: 'none !important' }}
+              {...a11yProps(0)}
+            />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          <AddForm
+            serie={serie}
+            setAlert={setAlert}
+            closeAddModal={closeAddModal}
+          />
+        </TabPanel>
+        <TabPanel
+          value={value}
+          index={1}
+          sx={{ width: 'max-content' }}
+          id="modal-modal-description"
+        >
+          {exercises.length > 0 ? (
+            <form>
+              <TextField label="Pesquisar" />
+              <List
+                style={{
+                  alignItems: 'center',
+                  overflowY: 'auto',
+                  overflowX: 'hidden',
+                  maxHeight: '200px',
+                  paddingTop: '30px',
+                }}
+              >
+                {serie.exercises.map((exercise) => (
+                  <Exercise key={exercise.name}>
+                    {exercise.img != '' ? (
+                      <img src={exercise.gifUrl} />
+                    ): ''}
+                    <div style={{ width: '90%', alignItems: 'center' }}>
+                      {exercise.name.lenght > 30 ? (
+                        <p title={exercise.name}>
+                          {exercise.name.slice(0, 30)}...
+                        </p>
+                      ) : (
+                        <p>{exercise.name}</p>
+                      )}
+                    </div>
+                    <IconButton>
+                      <AddRounded />
+                    </IconButton>
+                  </Exercise>
+                ))}
+              </List>
+            </form>
+          ) : (
+            <p style={{ color: '#444444', textAlign: 'center' }}>
+              Você ainda não salvou nenhum exercício
+            </p>
+          )}
+        </TabPanel>
+        <TabPanel value={value} index={2}></TabPanel>
       </ModalWindow>
     </>
   );

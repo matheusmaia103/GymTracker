@@ -1,75 +1,171 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import { P } from '../styles/indexStyles';
 import { Exercise } from '../styles/seriePage';
-import { IconButton, TextField } from '@mui/material';
-import { VideoLibraryRounded, YoutubeSearchedForRounded } from '@mui/icons-material';
+import { Checkbox, IconButton, MenuItem, TextField } from '@mui/material';
+import {
+  CheckBox,
+  Delete,
+  Edit,
+  EditRoadRounded,
+  MoreVertRounded,
+  VideoLibraryRounded,
+  YoutubeSearchedForRounded,
+} from '@mui/icons-material';
+import ThreeDotsMenu from './ThreeDotsMenu';
+import { red } from '@mui/material/colors';
+import ModalWindow from './Modal';
+import AddForm from './AddForm';
+import EditForm from './EditForm';
 
-const Exercises = ({exercise}) => {
-  if(exercise.video === ''){
+const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
+  if (exercise.video === '') {
     exercise.video =
-      'https://www.youtube.com/results?search_query='+exercise.name.replace(' ', '+');
+      'https://www.youtube.com/results?search_query=' +
+      exercise.name.replace(' ', '+');
   }
 
+  const [img, setImg] = useState(exercise.gifUrl);
+  const [name, setName] = useState(exercise.name);
   const [sets, setSets] = useState(exercise.sets);
   const [reps, setReps] = useState(exercise.reps);
+  const [weight, setWeight] = useState(exercise.weight);
+  const [obs, setObs] = useState(exercise.obs);
+  const [done, setDone] = useState(false);
+  const handleDone = (e) => {
+    setDone(!done);
+    console.log(exercise);
+  };
+
+  //menu
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  //delete exercise
+  const deleteExercise = () => {
+    const sureDelete = window.confirm(
+      `Tem certeza que deseja excluir o exercício ${exercise.name}?`
+    );
+    handleClose();
+    if (sureDelete) {
+      console.log(serie);
+      dispatch({
+        type: 'DELETE_EXERCISE',
+        payload: {
+          serieId: serie.id,
+          serieName: serie.name,
+          exercise: exercise,
+        },
+      });
+    }
+    setAlert(true);
+  };
+
+  //modal edit
+  const [isOpen, setOpen] = useState(false);
+  const closeModal = () => {
+    handleClose();
+    setOpen(false);
+  };
+  const openModal = () => setOpen(true);
+
   return (
-    <Exercise>
-      <p>
-        <div>
-          {exercise.img != '' ? <img src={exercise.gifUrl} alt="" /> : ''}
-          <div
+    <Exercise className="exercise" key={exercise.id}>
+      <Checkbox
+        checked={done}
+        sx={{ width: '48px', height: '48px', alignSelf: 'center' }}
+        onClick={handleDone}
+      />
+      {exercise.gifUrl !== '' ? <img src={img} alt={exercise.name} /> : ''}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-evenly',
+          alignItems: 'center',
+          width: '90%',
+          marginLeft: '6px',
+        }}
+      >
+        <p>{exercise.name}</p>
+        <p
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            width: '100% !important',
+          }}
+        >
+          {sets && reps ? (
+            <span>
+              {sets} x {reps}
+            </span>
+          ) : (
+            ''
+          )}
+          {weight ? <span>{weight} Kg</span> : ''}
+        </p>
+        {exercise.obs != '' ? (
+          <p
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
+              marginTop: '5px',
+              marginBottom: '5px',
+              marginLeft: '12px',
+              color: '#5a5959',
+              fontWeight: '500',
             }}
           >
-            <p>{exercise.name}</p>
-            <p
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-              }}
-            >
-              <TextField
-                defaultValue={sets}
-                onChange={(e) => setSets(e.target.value)}
-                label="Sets"
-                variant="filled"
-                color="secondary"
-                size="small"
-                sx={{ maxWidth: '60px', textAlign: 'right' }}
-              />
-              x
-              <TextField
-                defaultValue={reps}
-                onChange={(e) => setReps(e.target.value)}
-                label="Reps"
-                variant="filled"
-                color="secondary"
-                size="small"
-                sx={{ maxWidth: '70px' }}
-              />
-            </p>
-          </div>
-        </div>
-        <div></div>
-        {/*
-        <div>
-          <a href={exercise.video} target="_blank" rel='noferrer'>
-            <IconButton>
-              <VideoLibraryRounded />
-            </IconButton>
+            {exercise.obs}
+          </p>
+        ) : (
+          ''
+        )}
+      </div>
+      <ThreeDotsMenu
+        handleClose={handleClose}
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
+      >
+        <MenuItem onClick={handleClose}>
+          <a
+            href={exercise.video}
+            target="_blank"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              color: 'unset',
+              textDecoration: 'none',
+              textTransform: 'none',
+            }}
+          >
+            <VideoLibraryRounded color={red[500]} />
+            Ver vídeo demonstrativo
           </a>
-        </div>
-            */}
-      </p>
-      {exercise.obs != '' ? <p>{exercise.obs}</p> : ''}
+        </MenuItem>
+        <MenuItem onClick={openModal}>
+          <Edit />
+          Editar
+        </MenuItem>
+        <MenuItem onClick={deleteExercise}>
+          <Delete />
+          Apagar
+        </MenuItem>
+      </ThreeDotsMenu>
+
+      <ModalWindow isOpen={isOpen} closeModal={closeModal}>
+        <EditForm
+          serie={serie}
+          setAlert={setAlert}
+          closeAddModal={closeAddModal}
+          exercise={exercise}
+          dispatch={dispatch}
+          setOpen={setOpen}
+        />
+      </ModalWindow>
     </Exercise>
   );
-}
+};
 
-export default Exercises
+export default Exercises;

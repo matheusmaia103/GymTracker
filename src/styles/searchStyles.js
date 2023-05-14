@@ -25,6 +25,11 @@ export const Form = styled.ul`
     img {
       max-width: 70px !important;
     }
+
+    p {
+      width: 100% !important;
+      background-color: yellow;
+    }
   }
 
   ::-webkit-scrollbar {
@@ -48,4 +53,4 @@ export const Form = styled.ul`
   }
 `;
 
-export const Searchli = styled.li``;
+export const Exercise = styled.li``;

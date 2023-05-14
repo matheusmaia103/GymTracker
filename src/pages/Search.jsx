@@ -4,6 +4,7 @@ import { TextField, IconButton, InputAdornment, Button } from '@mui/material';
 import { AddRounded, PlusOneRounded, SearchRounded } from '@mui/icons-material';
 import Exercises from '../Components/Exercises';
 import { H1, H2, H3 } from '../styles/indexStyles';
+import { List } from '../styles/indexStyles';
 import { muscle, muscles } from '../data';
 import { Form } from '../styles/searchStyles';
 
@@ -39,8 +40,14 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
-    if(targetM === '') return
-    fetch(`https://exercisedb.p.rapidapi.com/exercises/target/${targetM.replace(' ', '%20')}`, options)
+    if (targetM === '') return;
+    fetch(
+      `https://exercisedb.p.rapidapi.com/exercises/target/${targetM.replace(
+        ' ',
+        '%20'
+      )}`,
+      options
+    )
       .then((response) => response.json())
       .then((response) => {
         setResponse(response);
@@ -74,8 +81,12 @@ const SearchPage = () => {
               <Button
                 onClick={() => setTargetM(muscle.target)}
                 variant="contained"
-                color="primary"
-                sx={{ justifyContent: 'space-around' }}
+                color="inherit"
+                sx={{
+                  backgroundColor: 'white',
+                  justifyContent: 'space-evenly',
+                  borderRadius: '50px',
+                }}
               >
                 <img
                   src={muscle.gif}
@@ -88,19 +99,56 @@ const SearchPage = () => {
           ))}
         </Form>
       </form>
-      {response.map((exercise) => (
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ pointerEvents: 'none' }}
-        >
-          <span>
-            <img src={exercise.gifUrl} style={{ maxWidth: '70px' }} />
-            {exercise.name}
-          </span>
-          <AddRounded />
-        </Button>
-      ))}
+      <List
+        style={{
+          display: 'flex',
+          justifyContent: 'left',
+          alignItems: 'start',
+          flexDirection: 'column',
+          width: '100%',
+        }}
+      >
+        {response.map((exercise) => (
+          <p
+            style={{
+              backgroundColor: 'white',
+              color: 'black',
+              justifyContent: 'space-evenly',
+              borderRadius: '10px',
+              padding: '15px',
+              width: '90%',
+              maxWidth: '90vw',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <span
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'start',
+              }}
+            >
+              <img
+                src={exercise.gifUrl}
+                style={{
+                  maxWidth: '70px',
+                  borderRadius: '50px',
+                  marginRight: '8px'
+                }}
+              />
+              {exercise.name}
+            </span>
+            <IconButton
+              style={{
+                display: 'inline !important',
+              }}
+            >
+              <AddRounded />
+            </IconButton>
+          </p>
+        ))}
+      </List>
     </>
   );
 };

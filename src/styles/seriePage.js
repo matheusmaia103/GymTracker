@@ -9,7 +9,7 @@ export const List = styled.ul`
 
 export const Exercise = styled.li`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
 
   background: white;
@@ -17,21 +17,20 @@ export const Exercise = styled.li`
   margin: 8px;
   padding: 5px;
 
+  img {
+    width: 60px !important;
+    height: 60px !important;
+    align-self: center;
+  }
+
   p {
     text-align: left;
     color: black;
 
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
     display: flex;
     justify-content: space-between;
-    align-content: center !important;
-
-    img {
-      max-width: 80px;
-    }
-    div {
-      display: flex;
-      align-items: center !important;
-    }
+    align-items: center !important;
   }
 `;

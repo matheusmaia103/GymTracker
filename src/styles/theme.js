@@ -7,6 +7,14 @@ const theme = createTheme({
     primary: orange,
   },
   components: {
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          width: '48px',
+          height: '48px',
+        },
+      },
+    },
     MuiTextField: {
       styleOverrides: {
         root: {

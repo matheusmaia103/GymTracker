@@ -5,6 +5,9 @@ export const Store = createContext();
 
 const initialState = {
   series: Cookies.get('series') ? JSON.parse(Cookies.get('series')) : [],
+  exercises: Cookies.get('exercises')
+    ? JSON.parse(Cookies.get('exercises'))
+    : [],
   peso: Cookies.get('peso')
     ? JSON.parse(Cookies.get('peso'))
     : { msg: 'A definir', current: '', new: '', last: Date.now() },
@@ -41,11 +44,16 @@ function Reducer(state, action) {
           open: true,
         },
       };
+      break;
+
     case 'FECHAR_AVISO':
       return { ...state, dialog: { open: false } };
 
+      break;
+
     case 'APAGAR_COOKIES':
       Cookies.set('series', []);
+      Cookies.set('exercises', []);
       Cookies.set(
         'peso',
         JSON.stringify({
@@ -60,6 +68,7 @@ function Reducer(state, action) {
       return {
         ...state,
         series: [],
+        exercises: [],
         peso: { msg: 'A definir', current: '', new: '', last: Date.now() },
         weightHistory: [],
         dialog: {
@@ -69,6 +78,8 @@ function Reducer(state, action) {
           open: true,
         },
       };
+
+      break;
 
     case 'UPDATE_PESO':
       const novoPeso = parseFloat(action.payload);
@@ -124,6 +135,7 @@ function Reducer(state, action) {
           open: true,
         },
       };
+      break;
 
     case 'ADD_EXERCISE':
       const payload = action.payload;
@@ -133,23 +145,26 @@ function Reducer(state, action) {
         name: payload.name,
         sets: payload.sets,
         reps: payload.reps,
+        weight: payload.weight,
         video: payload.video,
         obs: payload.obs,
         order: payload.order,
+        id: Math.floor(Math.random() * 7000),
       };
 
       const newArrSeries = stateSeries.map((serie) => {
-        if (serie.id === payload.id) {
+        if (serie.id === payload.serieId) {
           serie.exercises = [...serie.exercises, newE];
-
           return serie;
         }
         return serie;
       });
 
       Cookies.set('series', JSON.stringify(newArrSeries));
+      Cookies.set('exercises', JSON.stringify([...state.exercises, newE]));
       return {
         ...state,
+        exercises: [...state.exercises, newE],
         series: newArrSeries,
         dialog: {
           title: 'Novo exercício adicionado!',
@@ -157,7 +172,79 @@ function Reducer(state, action) {
           severety: 'success',
         },
       };
+      break;
 
+    case 'DELETE_EXERCISE':
+      const payloadDelete = action.payload;
+      const serieId = payloadDelete.serieId;
+      const serieName = payloadDelete.serieName;
+      const exerciseToDelete = payloadDelete.exercise;
+
+      const arrDelete = state.series;
+      const newArrayDelete = arrDelete.map((obj) => {
+        if (obj.id === serieId) {
+          obj.exercises = obj.exercises.filter(
+            (exercise) => exercise.id !== exerciseToDelete.id
+          );
+          return obj;
+        }
+        return obj;
+      });
+
+      Cookies.set('series', JSON.stringify(newArrayDelete));
+
+      return {
+        ...state,
+        series: newArrayDelete,
+        dialog: {
+          title: 'Feito!',
+          message: `O exercício ${payloadDelete.exercise.name} foi excluído da série ${serieName}!`,
+        },
+      };
+
+      break;
+
+    case 'EDIT_EXERCISE':
+      const editPayload = action.payload;
+      const idToEdit = editPayload.exercise.id;
+      const serieToEdit = editPayload.serie.id;
+      const exercisesInSerie = editPayload.serie.exercises.map((exercise) => {
+        if (exercise.id === idToEdit) return editPayload.exercise;
+        return exercise;
+      });
+
+      const editedSerie = state.series.filter(
+        (serie) => serie.id === serieToEdit
+      );
+
+      const editedExerciseList = state.exercises.map((exercise) => {
+        if (exercise.id === idToEdit) {
+          return editPayload.exercise;
+        }
+        return exercise;
+      });
+
+      const newEditArr = state.series.map((serie) => {
+        if (serie.id === serieToEdit)
+          return { ...serie, exercises: exercisesInSerie };
+        return serie;
+      });
+
+      Cookies.set('series', JSON.stringify(newEditArr));
+      Cookies.set('exercises', JSON.stringify(editedExerciseList));
+
+      return {
+        ...state,
+        series: newEditArr,
+        exercises: editedExerciseList,
+        dialog: {
+          title: 'Exercício editado',
+          msg: 'Mudança feita!',
+          severety: 'success',
+        },
+      };
+
+      break;
     case 'EDITAR_SERIE':
       const edited = action.payload;
       const series = state.series;
@@ -181,6 +268,7 @@ function Reducer(state, action) {
           open: true,
         },
       };
+      break;
 
     case 'DELETAR_SERIE':
       const serie = action.payload;
@@ -198,6 +286,8 @@ function Reducer(state, action) {
           open: true,
         },
       };
+
+      break;
 
     default:
       return state;

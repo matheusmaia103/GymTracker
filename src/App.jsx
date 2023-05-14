@@ -27,6 +27,7 @@ import {
 import Serie from './Components/serie';
 import {
   AddRounded,
+  FitnessCenterRounded,
   ListAltRounded,
   OpenInBrowser,
   PlusOneRounded,
@@ -41,6 +42,7 @@ import { Alert, AlertTitle } from '@mui/material';
 import Cookies from 'js-cookie';
 import { Store } from './Store';
 import { SeriePage } from './pages/SeriePage';
+import ExercisesPage from './pages/ExercisesPage';
 
 
 
@@ -89,6 +91,13 @@ function App() {
               </Link>
             </li>
             <li>
+              <Link to="/exercises">
+                <IconButton>
+                  <FitnessCenterRounded />
+                </IconButton>
+              </Link>
+            </li>
+            <li>
               <Link to="/">
                 <IconButton>
                   <ListAltRounded />
@@ -99,16 +108,20 @@ function App() {
         </Nav>
         <Main>
           <Routes>
-            <Route path="/" element={<Home setAlert={setAlert} />}></Route>
+            <Route path="/" element={<Home setAlert={setAlert} />} />
             <Route
               path="/search"
               element={<SearchPage setAlert={setAlert} />}
-            ></Route>
+            />
 
             <Route
               path="/serie/:serieId"
               element={<SeriePage series={series} setAlert={setAlert} />}
-            ></Route>
+            />
+            <Route
+              path="/exercises"
+              element={<ExercisesPage setAlert={setAlert} />}
+            />
           </Routes>
         </Main>
 

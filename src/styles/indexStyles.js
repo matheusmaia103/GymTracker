@@ -38,9 +38,9 @@ export const Body = styled.div`
 
   * {
     box-sizing: border-box;
+    text-transform: none !important;
   }
 
-  //a
   a {
     text-decoration: none !important;
   }
@@ -79,18 +79,27 @@ export const Body = styled.div`
     display: flex !important;
     align-items: center;
   }
+
+  .css-8atqhb,
+  #simple-tabpanel-1,
+  .MuiBox-root,
+  .MuiTabs-flexContainer,
+  .css-heg063-MuiTabs-flexContainer,
+  .css-1v3hsb3 {
+    width: max-content !important;
+  }
 `;
 
 export const Main = styled.main`
   min-width: 80vw !important;
-  max-width: 100vw !important;
+  max-width: 800px !important;
   width: 99%;
   padding: 50px 35px 50px 35px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: start;
+  align-items: center;
 
   position: relative;
 `;
@@ -150,14 +159,6 @@ export const H3 = styled.h3`
   display: flex;
   justify-content: end;
 `;
-export const List = styled.ul`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-`;
 
 export const P = styled.li`
   list-style: none;
@@ -202,4 +203,15 @@ export const PlusBtn = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+`;
+
+export const List = styled.ul`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 20px;
+  padding: 10px;
 `;

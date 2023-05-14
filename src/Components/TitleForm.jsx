@@ -1,5 +1,5 @@
-import { CancelRounded, DeleteRounded } from '@mui/icons-material';
-import { Box, Button, Modal, TextField } from '@mui/material';
+import { CancelRounded, ClearRounded, DeleteRounded } from '@mui/icons-material';
+import { Box, Button, IconButton, Modal, TextField } from '@mui/material';
 import React, {useContext, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Store } from '../Store';
@@ -55,16 +55,13 @@ const TitleForm = ({serie, setAlert, closeModal}) => {
           variant="filled"
           color="primary"
         />
-        <p style={{ display: 'flex', justifyItems: 'end' }}>
+        <p style={{ display: 'flex', justifyItems: 'end', width: 'max-content' }}>
           <Button variant="contained" color="primary" type="submit">
             Salvar
           </Button>
-          <Button variant="contained" color="info" onClick={closeModal}>
-            <CancelRounded /> Cancelar
-          </Button>
-          <Button variant="contained" color="warning" onClick={deleteSerie}>
-            <DeleteRounded /> Excluir série
-          </Button>
+        <Button variant="contained" color="error" onClick={deleteSerie}>
+          <DeleteRounded /> Excluir série
+        </Button>
         </p>
       </form>
     </>
