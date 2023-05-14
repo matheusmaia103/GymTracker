@@ -151,10 +151,12 @@ function Reducer(state, action) {
         order: payload.order,
         id: Math.floor(Math.random() * 7000),
       };
+      let serieNameE;
 
       const newArrSeries = stateSeries.map((serie) => {
         if (serie.id === payload.serieId) {
           serie.exercises = [...serie.exercises, newE];
+          serieNameE = serie.name;
           return serie;
         }
         return serie;
@@ -168,7 +170,7 @@ function Reducer(state, action) {
         series: newArrSeries,
         dialog: {
           title: 'Novo exercício adicionado!',
-          message: `${newE.title} à serie!`,
+          message: `${newE.name} à serie ${serieNameE}!`,
           severety: 'success',
         },
       };
@@ -199,6 +201,30 @@ function Reducer(state, action) {
         dialog: {
           title: 'Feito!',
           message: `O exercício ${payloadDelete.exercise.name} foi excluído da série ${serieName}!`,
+        },
+      };
+
+      break;
+
+    case 'ADD_FROM_LIST':
+      const exerciseToInclude = action.payload.exercise;
+
+      const serieObj = action.payload.serie;
+
+      const newArrSeriesToAdd = state.series.map((serie) => {
+        if (serie.id === serieObj.id) {
+          serieObj.exercises = [...serieObj.exercises, exerciseToInclude];
+        }
+        return serie;
+      });
+
+      Cookies.set('series', JSON.stringify(newArrSeriesToAdd));
+      return {
+        ...state,
+        serie: newArrSeriesToAdd,
+        dialog: {
+          title: 'Exercício adicionado da lista',
+          message: `${exerciseToInclude.name} foi adicionado à serie ${serieObj.name}`,
         },
       };
 
@@ -245,6 +271,24 @@ function Reducer(state, action) {
       };
 
       break;
+
+    case 'ADD_TO_LIST':
+      Cookies.set(
+        'exercises',
+        JSON.stringify([...state.exercises, action.payload.exercise])
+      );
+
+      return {
+        ...state,
+        exercises: [...state.exercises, action.payload.exercise],
+        dialog: {
+          title: 'Feito!',
+          message: `${action.payload.exercise.name} foi adcionado à sua lista`,
+        },
+      };
+
+      break;
+
     case 'EDITAR_SERIE':
       const edited = action.payload;
       const series = state.series;

@@ -95,7 +95,6 @@ function Home({ setAlert }) {
 
   return (
     <>
-      <H1>Treino</H1>
       <form onSubmit={updatePeso} style={{width: '100%', textAlign: 'right', color: 'black'}}>
           <TextField
             variant="filled"

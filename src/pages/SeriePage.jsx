@@ -24,10 +24,11 @@ import { Store } from '../Store';
 import Serie from '../Components/serie';
 import Exercises from '../Components/Exercises';
 import ModalWindow from '../Components/Modal';
-import TitleForm from '../Components/TitleForm';
-import AddForm from '../Components/AddForm';
+import TitleForm from '../Components/forms/TitleForm';
+import AddForm from '../Components/forms/AddForm';
 import PropTypes from 'prop-types';
 import { Exercise } from '../styles/seriePage';
+import AddFrom from '../Components/forms/AddFrom';
 
 export const SeriePage = ({ setAlert }) => {
   //params
@@ -187,45 +188,13 @@ export const SeriePage = ({ setAlert }) => {
           id="modal-modal-description"
         >
           {exercises.length > 0 ? (
-            <form>
-              <TextField label="Pesquisar" />
-              <List
-                style={{
-                  alignItems: 'center',
-                  overflowY: 'auto',
-                  overflowX: 'hidden',
-                  maxHeight: '200px',
-                  paddingTop: '30px',
-                }}
-              >
-                {serie.exercises.map((exercise) => (
-                  <Exercise key={exercise.name}>
-                    {exercise.img != '' ? (
-                      <img src={exercise.gifUrl} />
-                    ): ''}
-                    <div style={{ width: '90%', alignItems: 'center' }}>
-                      {exercise.name.lenght > 30 ? (
-                        <p title={exercise.name}>
-                          {exercise.name.slice(0, 30)}...
-                        </p>
-                      ) : (
-                        <p>{exercise.name}</p>
-                      )}
-                    </div>
-                    <IconButton>
-                      <AddRounded />
-                    </IconButton>
-                  </Exercise>
-                ))}
-              </List>
-            </form>
+            <AddFrom serie={serie} setAlert={setAlert}/>
           ) : (
             <p style={{ color: '#444444', textAlign: 'center' }}>
               Você ainda não salvou nenhum exercício
             </p>
           )}
         </TabPanel>
-        <TabPanel value={value} index={2}></TabPanel>
       </ModalWindow>
     </>
   );

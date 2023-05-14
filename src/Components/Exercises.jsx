@@ -14,8 +14,8 @@ import {
 import ThreeDotsMenu from './ThreeDotsMenu';
 import { red } from '@mui/material/colors';
 import ModalWindow from './Modal';
-import AddForm from './AddForm';
-import EditForm from './EditForm';
+import AddForm from './forms/AddForm';
+import EditForm from './forms/EditForm';
 
 const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
   if (exercise.video === '') {
@@ -68,7 +68,10 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
     handleClose();
     setOpen(false);
   };
-  const openModal = () => setOpen(true);
+  const openModal = () => {
+    handleClose();
+    setOpen(true);
+  };
 
   return (
     <Exercise className="exercise" key={exercise.id}>

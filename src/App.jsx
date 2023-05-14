@@ -28,6 +28,7 @@ import Serie from './Components/serie';
 import {
   AddRounded,
   FitnessCenterRounded,
+  HomeRounded,
   ListAltRounded,
   OpenInBrowser,
   PlusOneRounded,
@@ -81,7 +82,7 @@ function App() {
     <Body>
       <Router>
         <Nav>
-          <Title>App de treino</Title>
+          <Title>Treino</Title>
           <ul>
             <li>
               <Link to="/search">
@@ -100,7 +101,7 @@ function App() {
             <li>
               <Link to="/">
                 <IconButton>
-                  <ListAltRounded />
+                  <HomeRounded />
                 </IconButton>
               </Link>
             </li>
@@ -111,7 +112,7 @@ function App() {
             <Route path="/" element={<Home setAlert={setAlert} />} />
             <Route
               path="/search"
-              element={<SearchPage setAlert={setAlert} />}
+              element={<SearchPage setAlert={setAlert} dispatch={dispatch} />}
             />
 
             <Route

@@ -2,7 +2,7 @@ import { CancelRounded, ClearRounded, DeleteRounded } from '@mui/icons-material'
 import { Box, Button, IconButton, Modal, TextField } from '@mui/material';
 import React, {useContext, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store } from '../Store';
+import { Store } from '../../Store';
 
 const TitleForm = ({serie, setAlert, closeModal}) => {
   const { state, dispatch } = useContext(Store);

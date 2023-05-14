@@ -8,20 +8,17 @@ import { List } from '../styles/indexStyles';
 import { muscle, muscles } from '../data';
 import { Form } from '../styles/searchStyles';
 
-const SearchPage = () => {
+const SearchPage = ({ dispatch, setAlert }) => {
   const [query, setQuery] = useState('');
 
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(url, options)
-      .then((response) => response.json())
-      .then((response) => {
-        setResponse(response);
-      });
+  const Add = (exercise) => {
+    console.log(exercise);
+    dispatch({ type: 'ADD_TO_LIST', payload: { exercise: exercise } });
+    setAlert(true);
   };
 
   const [name, setName] = useState('triceps');
@@ -37,6 +34,15 @@ const SearchPage = () => {
       'X-RapidAPI-Key': process.env.REACT_APP_KEY_ENV,
       'X-RapidAPI-Host': process.env.REACT_APP_HOST_ENV,
     },
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(url, options)
+      .then((response) => response.json())
+      .then((response) => {
+        setResponse(response);
+      });
+    console.log(response);
   };
 
   useEffect(() => {
@@ -134,7 +140,7 @@ const SearchPage = () => {
                 style={{
                   maxWidth: '70px',
                   borderRadius: '50px',
-                  marginRight: '8px'
+                  marginRight: '8px',
                 }}
               />
               {exercise.name}
@@ -143,6 +149,7 @@ const SearchPage = () => {
               style={{
                 display: 'inline !important',
               }}
+              onClick={(e) => Add(exercise)}
             >
               <AddRounded />
             </IconButton>

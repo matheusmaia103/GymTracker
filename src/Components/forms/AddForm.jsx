@@ -1,6 +1,6 @@
 import { Button, TextField } from '@mui/material';
 import React, { useState, useContext, useEffect } from 'react';
-import { Store } from '../Store';
+import { Store } from '../../Store';
 import { AddRounded } from '@mui/icons-material';
 
 const AddForm = ({ serie, setAlert, closeAddModal }) => {
@@ -30,6 +30,7 @@ const AddForm = ({ serie, setAlert, closeAddModal }) => {
     };
     closeAddModal();
     dispatch({ type: 'ADD_EXERCISE', payload: newExercise });
+    setAlert(true)
   };
 
   return (

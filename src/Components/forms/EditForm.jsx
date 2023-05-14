@@ -1,6 +1,6 @@
 import { Button, InputAdornment, TextField } from '@mui/material';
 import React, { useState, useContext, useEffect } from 'react';
-import { Store } from '../Store';
+import { Store } from '../../Store';
 import { AddRounded } from '@mui/icons-material';
 
 const EditForm = ({ serie, setOpen, setAlert, closeAddModal, exercise, dispatch }) => {
