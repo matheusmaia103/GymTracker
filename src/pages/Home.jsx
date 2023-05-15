@@ -29,6 +29,7 @@ function Home({ setAlert }) {
   const [getPeso, setPeso] = useState(peso.new);
 
 
+
   let arr = 'a b c d e f g h i j l m n';
   arr = arr.toUpperCase();
   arr = arr.split(' ');
@@ -135,7 +136,7 @@ function Home({ setAlert }) {
             <Button
               variant="contained"
               sx={{
-                width: '80%',
+                width: '95%',
                 borderRadius: '50px',
                 display: 'flex',
                 justifyContent: 'space-between',

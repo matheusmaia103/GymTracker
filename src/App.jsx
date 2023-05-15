@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import logo from './logo.svg';
 import Home from './pages/Home';
 import SearchPage from './pages/Search';
@@ -67,16 +68,8 @@ function App() {
   const [isOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
+
+
 
   return (
     <Body>

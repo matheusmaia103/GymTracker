@@ -209,5 +209,5 @@ export const List = styled.ul`
   align-items: center;
 
   margin-top: 20px;
-  padding: 10px;
+  padding: 3px;
 `;
