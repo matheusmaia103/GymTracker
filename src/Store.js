@@ -154,7 +154,7 @@ function Reducer(state, action) {
       let serieNameE;
 
       const newArrSeries = stateSeries.map((serie) => {
-        if (serie.id === payload.serieId) {
+        if (serie.id == payload.serieId) {
           serie.exercises = [...serie.exercises, newE];
           serieNameE = serie.name;
           return serie;
@@ -184,7 +184,7 @@ function Reducer(state, action) {
 
       const arrDelete = state.series;
       const newArrayDelete = arrDelete.map((obj) => {
-        if (obj.id === serieId) {
+        if (obj.id == serieId) {
           obj.exercises = obj.exercises.filter(
             (exercise) => exercise.id !== exerciseToDelete.id
           );
@@ -212,7 +212,7 @@ function Reducer(state, action) {
       const serieObj = action.payload.serie;
 
       const newArrSeriesToAdd = state.series.map((serie) => {
-        if (serie.id === serieObj.id) {
+        if (serie.id == serieObj.id) {
           serieObj.exercises = [...serieObj.exercises, exerciseToInclude];
         }
         return serie;
@@ -240,7 +240,7 @@ function Reducer(state, action) {
       });
 
       const editedSerie = state.series.filter(
-        (serie) => serie.id === serieToEdit
+        (serie) => serie.id == serieToEdit
       );
 
       const editedExerciseList = state.exercises.map((exercise) => {

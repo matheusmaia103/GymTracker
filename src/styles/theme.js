@@ -1,10 +1,10 @@
-import { orange, yellow } from '@mui/material/colors';
+import { blue, orange, yellow } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance.
 const theme = createTheme({
   palette: {
-    primary: orange,
+    primary: blue,
   },
   components: {
     MuiIconButton: {
@@ -19,9 +19,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           margin: '5px',
-          '& type:number': {
-            background: 'red',
-          },
         },
       },
     },
@@ -35,11 +32,11 @@ const theme = createTheme({
           justifyContent: 'space-between',
         },
         containedPrimary: {
-          //color: 'black',
+          color: 'black',
           border: '1px solid black',
           borderRadius: '10px',
           ':hover': {
-            background: '#e6e78f',
+            color: 'white',
           },
         },
       },

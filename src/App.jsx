@@ -82,7 +82,7 @@ function App() {
     <Body>
       <Router>
         <Nav>
-          <Title>Treino</Title>
+          <Title>TechFit</Title>
           <ul>
             <li>
               <Link to="/search">

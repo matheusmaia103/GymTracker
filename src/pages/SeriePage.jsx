@@ -40,7 +40,7 @@ export const SeriePage = ({ setAlert }) => {
   const { state, dispatch } = useContext(Store);
   const { exercises, series } = state;
   const [serie, setSerie] = useState(
-    series.filter((serie) => (serie.id = id))[0]
+    series.filter((serie) => (serie.id == id))[0]
   );
   console.clear();
   console.log(serie);
@@ -53,19 +53,6 @@ export const SeriePage = ({ setAlert }) => {
   const [adding, setAdding] = useState(false);
   const openAddModal = () => setAdding(true);
   const closeAddModal = () => setAdding(false);
-
-  //add exercise
-  const [isAddOpen, setAddOpen] = useState(false);
-  const [img, setImg] = useState(
-    'https://www.mundoboaforma.com.br/wp-content/uploads/2020/12/supino-inclinado-com-halteres.gif'
-  );
-  const [exerciseName, setExerciseName] = useState('');
-  const [sets, setSets] = useState(3);
-  const [reps, setReps] = useState(12);
-
-  const addToSerie = (name) => {
-    alert(name);
-  };
 
   //modal tabs
   const [value, setValue] = useState(0);

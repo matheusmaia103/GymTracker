@@ -18,7 +18,11 @@ const AddFrom = ({ serie, setAlert }) => {
   };
 
   useEffect(() => {
-    setExercises(exercises.filter((exercise) => exercise.name.includes(query)));
+    setExercises(
+      exercises.filter((exercise) =>
+        exercise.name.toLowerCase().includes(query.toLowerCase())
+      )
+    );
   }, [query]);
 
   return (

@@ -21,14 +21,14 @@ export const Exercise = styled.li`
     width: 60px !important;
     height: 60px !important;
     align-self: center;
+    border-radius: 5px;
   }
 
   p {
     text-align: left;
     color: black;
 
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center !important;

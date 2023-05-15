@@ -16,6 +16,7 @@ import {
 import Cookies from 'js-cookie';
 import { Store } from '../Store';
 import { Link } from 'react-router-dom';
+import ModalWindow from '../Components/Modal';
 
 function Home({ setAlert }) {
   //contexts
@@ -24,6 +25,7 @@ function Home({ setAlert }) {
   console.log(weightHistory);
   const date = new Date();
   const [getSeries, setSeries] = useState(series);
+  console.log(getSeries);
   const [getPeso, setPeso] = useState(peso.new);
 
 
@@ -95,23 +97,26 @@ function Home({ setAlert }) {
 
   return (
     <>
-      <form onSubmit={updatePeso} style={{width: '100%', textAlign: 'right', color: 'black'}}>
-          <TextField
-            variant="filled"
-            color="secondary"
-            defaultValue={getPeso}
-            onChange={handleChangePeso}
-            onBlur={updatePeso}
-            onSubmit={updatePeso}
-            label="Peso"
-            sx={{
-              width: '100px',
-            }}
-            InputProps={{
-              endAdornment: <InputAdornment position='end'>Kg</InputAdornment>
-            }}
-          />
-        <p style={{marginTop: '3px'}}>{peso.msg}</p>
+      <form
+        onSubmit={updatePeso}
+        style={{ width: '100%', textAlign: 'right', color: 'black' }}
+      >
+        <TextField
+          variant="filled"
+          color="secondary"
+          defaultValue={getPeso}
+          onChange={handleChangePeso}
+          onBlur={updatePeso}
+          onSubmit={updatePeso}
+          label="Peso"
+          sx={{
+            width: '100px',
+          }}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
+          }}
+        />
+        <p style={{ marginTop: '3px' }}>{peso.msg}</p>
       </form>
 
       <br />
@@ -156,13 +161,7 @@ function Home({ setAlert }) {
         </Button>
       </List>
 
-      <Modal
-        open={isOpen}
-        onClose={closeModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
+      <ModalWindow isOpen={isOpen} closeModal={closeModal}>
           <form onSubmit={addSerie}>
             <TextField
               label="Nome da série"
@@ -179,17 +178,13 @@ function Home({ setAlert }) {
               variant="filled"
               color="primary"
             />
-            <p style={{ display: 'flex', justifyItems: 'end' }}>
+            <p style={{ display: 'flex', justifyContent: 'end' }}>
               <Button variant="contained" color="primary" type="submit">
                 Salvar
               </Button>
-              <Button variant="contained" color="info" onClick={closeModal}>
-                <CancelRounded /> Cancelar
-              </Button>
             </p>
           </form>
-        </Box>
-      </Modal>
+      </ModalWindow>
     </>
   );
 }

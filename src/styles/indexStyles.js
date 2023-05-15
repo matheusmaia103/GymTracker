@@ -17,11 +17,7 @@ export const Nav = styled.nav`
 `;
 export const Body = styled.div`
   list-style: none;
-  background: linear-gradient(
-    145deg,
-    rgb(235 234 233) 46%,
-    rgb(193 205 8) 100%
-  );
+  background: linear-gradient(145deg, rgb(235 234 233) 59%, #15519d);
   // linear-gradient(145deg, #ffc603 27%, #91761b 85%);
   //linear-gradient(145deg, rgb(253 253 253) 50%, rgb(145, 118, 27) 95%);
   color: white;
