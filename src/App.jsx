@@ -175,8 +175,7 @@ const submitForm = e => {
                 label="Peso"
                 defaultValue={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                placeholder="172"
-                type="number"
+                placeholder="77.60"
                 style={{ maxWidth: '120px' }}
                 InputProps={{
                   endAdornment: (
