@@ -10,7 +10,13 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   IconButton,
+  InputAdornment,
+  Radio,
+  RadioGroup,
   Snackbar,
   TextField,
 } from '@mui/material';
@@ -32,6 +38,7 @@ import {
   HomeRounded,
   ListAltRounded,
   OpenInBrowser,
+  PersonRounded,
   PlusOneRounded,
   RotateLeftRounded,
   SearchRounded,
@@ -45,6 +52,7 @@ import Cookies from 'js-cookie';
 import { Store } from './Store';
 import { SeriePage } from './pages/SeriePage';
 import ExercisesPage from './pages/ExercisesPage';
+import ModalWindow from './Components/Modal';
 
 
 
@@ -52,7 +60,7 @@ import ExercisesPage from './pages/ExercisesPage';
 function App() {
   //contexts
   const { state, dispatch } = useContext(Store);
-  const { series, peso, dialog } = state;
+  const { series, peso, dialog, profile } = state;
   const date = new Date();
   const { title, message, severity } = dialog;
   const [alert, setAlert] = useState(false);
@@ -69,6 +77,20 @@ function App() {
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
+  const [name, setName] = useState(profile.name);
+  const [age, setAge] = useState(parseInt(profile.age));
+  const [height, setHeight] = useState(parseInt(profile.height));
+  const [weight, setWeight] = useState(parseInt(profile.weight));
+  const [sex, setSex] = useState(profile.sex);
+const submitForm = e => {
+  e.preventDefault()
+  let imc = weight/(height*height)
+  const profile = {name: name, age:age, height:height, sex: sex, weight: weight, IMC: imc}
+  console.log(profile);
+  dispatch({type: 'SAVE_PROFILE',  payload: profile})
+  closeModal()
+  setAlert(true)
+}
 
 
   return (
@@ -98,8 +120,111 @@ function App() {
                 </IconButton>
               </Link>
             </li>
+            <li>
+              <IconButton onClick={openModal}>
+                <PersonRounded />
+              </IconButton>
+            </li>
           </ul>
         </Nav>
+        <ModalWindow isOpen={isOpen} closeModal={closeModal}>
+          <form
+            onSubmit={submitForm}
+            style={{
+              maxWidth: '380px'
+            }}
+          >
+            <TextField
+              label="Nome"
+              defaultValue={name}
+              onChange={(e) => setName(e.target.value)}
+              fullWidth
+              required
+            />
+            <p
+              style={{
+                textAlign: 'center',
+                margin: '0',
+                display: 'inline-block',
+              }}
+            >
+              <TextField
+                label="idade"
+                defaultValue={age}
+                onChange={(e) => setAge(e.target.value)}
+                placeholder="20"
+                type="number"
+                style={{ maxWidth: '100px' }}
+                required
+              />
+              <TextField
+                label="altura"
+                defaultValue={height}
+                onChange={(e) => setHeight(e.target.value)}
+                placeholder="172"
+                type="number"
+                style={{ maxWidth: '120px' }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">cm</InputAdornment>
+                  ),
+                }}
+                required
+              />
+              <TextField
+                label="Peso"
+                defaultValue={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder="172"
+                type="number"
+                style={{ maxWidth: '120px' }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">Kg</InputAdornment>
+                  ),
+                }}
+                required
+              />
+            </p>
+            <FormControl>
+              <FormLabel id="demo-radio-buttons-group-label">Sexo</FormLabel>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue={sex}
+                onChange={(e) => setSex(e.target.value)}
+                name="radio-buttons-group"
+                sx={{ display: 'inline' }}
+                required
+              >
+                <FormControlLabel
+                  value="feminino"
+                  control={<Radio />}
+                  label="feminino"
+                />
+                <FormControlLabel
+                  value="masculino"
+                  control={<Radio />}
+                  label="masculino"
+                />
+              </RadioGroup>
+            </FormControl>
+            <p
+              style={{
+                textAlign: 'right',
+                margin: '0',
+                color: 'white !important',
+              }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ color: 'white !important' }}
+              >
+                Salvar
+              </Button>
+            </p>
+          </form>
+        </ModalWindow>
         <Main>
           <Routes>
             <Route path="/" element={<Home setAlert={setAlert} />} />

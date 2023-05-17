@@ -32,7 +32,6 @@ const theme = createTheme({
           justifyContent: 'space-between',
         },
         containedPrimary: {
-          color: 'black',
           border: '1px solid black',
           borderRadius: '10px',
           ':hover': {

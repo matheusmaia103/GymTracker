@@ -4,15 +4,17 @@ import Cookies from 'js-cookie';
 export const Store = createContext();
 
 const initialState = {
-  series: Cookies.get('series') ? JSON.parse(Cookies.get('series')) : [],
-  exercises: Cookies.get('exercises')
-    ? JSON.parse(Cookies.get('exercises'))
+  series: localStorage.getItem('series')
+    ? JSON.parse(localStorage.getItem('series'))
     : [],
-  peso: Cookies.get('peso')
-    ? JSON.parse(Cookies.get('peso'))
+  exercises: localStorage.getItem('exercises')
+    ? JSON.parse(localStorage.getItem('exercises'))
+    : [],
+  peso: localStorage.getItem('peso')
+    ? JSON.parse(localStorage.getItem('peso'))
     : { msg: 'A definir', current: '', new: '', last: Date.now() },
-  weightHistory: Cookies.get('weightHistory')
-    ? JSON.parse(Cookies.get('weightHistory'))
+  weightHistory: localStorage.getItem('weightHistory')
+    ? JSON.parse(localStorage.getItem('weightHistory'))
     : [],
   dialog: {
     message: '',
@@ -20,6 +22,9 @@ const initialState = {
     open: false,
     severety: 'success',
   },
+  profile: localStorage.getItem('profile')
+    ? JSON.parse(localStorage.getItem('profile'))
+    : { name: '', age: '', sex: '', weight: '', IMC: '' },
 };
 
 function Reducer(state, action) {
@@ -32,7 +37,7 @@ function Reducer(state, action) {
 
       const seriesEditadas = [...state.series, newSerie];
 
-      Cookies.set('series', JSON.stringify(seriesEditadas));
+      localStorage.setItem('series', JSON.stringify(seriesEditadas));
 
       return {
         ...state,
@@ -52,9 +57,9 @@ function Reducer(state, action) {
       break;
 
     case 'APAGAR_COOKIES':
-      Cookies.set('series', []);
-      Cookies.set('exercises', []);
-      Cookies.set(
+      localStorage.setItem('series', []);
+      localStorage.setItem('exercises', []);
+      localStorage.setItem(
         'peso',
         JSON.stringify({
           msg: 'A definir',
@@ -63,7 +68,7 @@ function Reducer(state, action) {
           last: Date.now(),
         })
       );
-      Cookies.set('weightHistory', []);
+      localStorage.setItem('weightHistory', []);
 
       return {
         ...state,
@@ -122,8 +127,11 @@ function Reducer(state, action) {
         msg: msg,
       };
 
-      Cookies.set('peso', JSON.stringify(objPeso));
-      Cookies.set('weightHistory', JSON.stringify([...history, change]));
+      localStorage.setItem('peso', JSON.stringify(objPeso));
+      localStorage.setItem(
+        'weightHistory',
+        JSON.stringify([...history, change])
+      );
       return {
         ...state,
         peso: objPeso,
@@ -162,8 +170,11 @@ function Reducer(state, action) {
         return serie;
       });
 
-      Cookies.set('series', JSON.stringify(newArrSeries));
-      Cookies.set('exercises', JSON.stringify([...state.exercises, newE]));
+      localStorage.setItem('series', JSON.stringify(newArrSeries));
+      localStorage.setItem(
+        'exercises',
+        JSON.stringify([...state.exercises, newE])
+      );
       return {
         ...state,
         exercises: [...state.exercises, newE],
@@ -193,7 +204,7 @@ function Reducer(state, action) {
         return obj;
       });
 
-      Cookies.set('series', JSON.stringify(newArrayDelete));
+      localStorage.setItem('series', JSON.stringify(newArrayDelete));
 
       return {
         ...state,
@@ -218,7 +229,7 @@ function Reducer(state, action) {
         return serie;
       });
 
-      Cookies.set('series', JSON.stringify(newArrSeriesToAdd));
+      localStorage.setItem('series', JSON.stringify(newArrSeriesToAdd));
       return {
         ...state,
         serie: newArrSeriesToAdd,
@@ -256,8 +267,8 @@ function Reducer(state, action) {
         return serie;
       });
 
-      Cookies.set('series', JSON.stringify(newEditArr));
-      Cookies.set('exercises', JSON.stringify(editedExerciseList));
+      localStorage.setItem('series', JSON.stringify(newEditArr));
+      localStorage.setItem('exercises', JSON.stringify(editedExerciseList));
 
       return {
         ...state,
@@ -273,7 +284,7 @@ function Reducer(state, action) {
       break;
 
     case 'ADD_TO_LIST':
-      Cookies.set(
+      localStorage.setItem(
         'exercises',
         JSON.stringify([...state.exercises, action.payload.exercise])
       );
@@ -301,7 +312,7 @@ function Reducer(state, action) {
         return serie;
       });
 
-      Cookies.set('series', JSON.stringify(editedSeries));
+      localStorage.setItem('series', JSON.stringify(editedSeries));
 
       return {
         ...state,
@@ -319,7 +330,7 @@ function Reducer(state, action) {
       const seriesArr = state.series;
       const newArr = seriesArr.filter((arr) => arr.id !== serie.id);
 
-      Cookies.set('series', JSON.stringify(newArr));
+      localStorage.setItem('series', JSON.stringify(newArr));
 
       return {
         ...state,
@@ -332,6 +343,17 @@ function Reducer(state, action) {
       };
 
       break;
+
+    case 'SAVE_PROFILE':
+      localStorage.setItem('profile', JSON.stringify(action.payload));
+      return {
+        ...state,
+        profile: action.payload,
+        dialog: {
+          title: 'Perfil editado!',
+          message: `Seu perfil foi editado, ${action.payload.name[0]}!`,
+        },
+      };
 
     default:
       return state;

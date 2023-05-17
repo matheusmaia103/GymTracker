@@ -141,6 +141,7 @@ function Home({ setAlert }) {
                 display: 'flex',
                 justifyContent: 'space-between',
                 background: 'white',
+                color: 'black',
               }}
             >
               Série {n.name} - {n.title}
@@ -163,28 +164,28 @@ function Home({ setAlert }) {
       </List>
 
       <ModalWindow isOpen={isOpen} closeModal={closeModal}>
-          <form onSubmit={addSerie}>
-            <TextField
-              label="Nome da série"
-              defaultValue={name}
-              onChange={(e) => setName(e.target.value.toUpperCase())}
-              variant="filled"
-              color="primary"
-              sx={{ textTransform: 'capitalize' }}
-            />
-            <TextField
-              label="Título da série"
-              defaultValue={title}
-              onChange={(e) => setTitle(e.target.value)}
-              variant="filled"
-              color="primary"
-            />
-            <p style={{ display: 'flex', justifyContent: 'end' }}>
-              <Button variant="contained" color="primary" type="submit">
-                Salvar
-              </Button>
-            </p>
-          </form>
+        <form onSubmit={addSerie}>
+          <TextField
+            label="Nome da série"
+            defaultValue={name}
+            onChange={(e) => setName(e.target.value.toUpperCase())}
+            variant="filled"
+            color="primary"
+            sx={{ textTransform: 'capitalize' }}
+          />
+          <TextField
+            label="Título da série"
+            defaultValue={title}
+            onChange={(e) => setTitle(e.target.value)}
+            variant="filled"
+            color="primary"
+          />
+          <p style={{ display: 'flex', justifyContent: 'end' }}>
+            <Button variant="contained" color="primary" type="submit">
+              Salvar
+            </Button>
+          </p>
+        </form>
       </ModalWindow>
     </>
   );
