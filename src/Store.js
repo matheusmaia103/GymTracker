@@ -350,8 +350,8 @@ function Reducer(state, action) {
         ...state,
         profile: action.payload,
         dialog: {
-          title: 'Perfil editado!',
-          message: `Seu perfil foi editado, ${action.payload.name[0]}!`,
+          title: 'Feito!',
+          message: `Seu perfil foi editado!`,
         },
       };
 
