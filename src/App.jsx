@@ -79,8 +79,8 @@ function App() {
 
   const [name, setName] = useState(profile.name);
   const [age, setAge] = useState(parseInt(profile.age));
-  const [height, setHeight] = useState(parseInt(profile.height));
-  const [weight, setWeight] = useState(parseInt(profile.weight));
+  const [height, setHeight] = useState(parseFloat(profile.height));
+  const [weight, setWeight] = useState(parseFloat(profile.weight));
   const [sex, setSex] = useState(profile.sex);
 const submitForm = e => {
   e.preventDefault()

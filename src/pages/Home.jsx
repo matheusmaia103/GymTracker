@@ -101,7 +101,7 @@ function Home({ setAlert, weight, setWeight }) {
           placeholder="80"
           type="number"
           sx={{
-            width: '100px',
+            width: '160px',
           }}
           inputProps={{
             step: '0.01',
