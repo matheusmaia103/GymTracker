@@ -3,8 +3,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Store } from '../../Store';
 import { AddRounded } from '@mui/icons-material';
 
-const EditForm = ({ serie, setOpen, setAlert, closeAddModal, exercise, dispatch }) => {
-
+const EditForm = ({
+  serie,
+  setOpen,
+  setAlert,
+  closeAddModal,
+  exercise,
+  dispatch,
+}) => {
   const [img, setImg] = useState(exercise.gifUrl);
   const [name, setName] = useState(exercise.name);
   const [sets, setSets] = useState(exercise.sets);
@@ -32,21 +38,33 @@ const EditForm = ({ serie, setOpen, setAlert, closeAddModal, exercise, dispatch 
       type: 'EDIT_EXERCISE',
       payload: { serie: serie, exercise: editedExercise },
     });
-    setOpen(false)
+    setOpen(false);
+    setAlert(true);
   };
 
   return (
     <form
       onSubmit={editExercise}
-      style={{ width: 'max-content', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      style={{
+        width: 'max-content',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
     >
-      <TextField
-        label="imagem ilustrativa"
-        defaultValue={img}
-        type="url"
-        onChange={(e) => setImg(e.target.value)}
-        helperText="link de uma imagem para ilustrar"
-      />
+      {img !== '' ? (
+        <img
+          src={img}
+          alt="Imagem do exercício"
+          style={{
+            maxWidth: '120px',
+            borderRadius: '5px',
+            marginBottom: '12px',
+          }}
+        />
+      ) : (
+        ''
+      )}
       <TextField
         label="nome do exercício"
         defaultValue={name}
@@ -81,7 +99,11 @@ const EditForm = ({ serie, setOpen, setAlert, closeAddModal, exercise, dispatch 
           label="Peso"
           defaultValue={weight}
           type="number"
+          step="0.01"
           onChange={(e) => setWeight(e.target.value)}
+          inputProps={{
+            step: '0.25'
+          }}
           InputProps={{
             endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
           }}
@@ -89,13 +111,20 @@ const EditForm = ({ serie, setOpen, setAlert, closeAddModal, exercise, dispatch 
         />
       </span>
       <TextField
+        label="imagem ilustrativa"
+        defaultValue={img}
+        type="url"
+        onChange={(e) => setImg(e.target.value)}
+        helperText="link de uma imagem para ilustrar"
+      />
+      <TextField
         label="Observação"
         defaultValue={obs}
         type="text"
         onChange={(e) => setObs(e.target.value)}
         helperText="Informações adicionais"
       />
-      <div style={{display: 'inline', width: '100%'}}>
+      <div style={{ display: 'inline', width: '100%' }}>
         <Button variant="contained" color="primary" type="submit">
           Atualizar
         </Button>

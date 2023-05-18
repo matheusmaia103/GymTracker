@@ -18,17 +18,17 @@ import { Store } from '../Store';
 import { Link } from 'react-router-dom';
 import ModalWindow from '../Components/Modal';
 
-function Home({ setAlert }) {
+function Home({ setAlert, weight, setWeight }) {
   //contexts
   const { state, dispatch } = useContext(Store);
-  const { series, peso, weightHistory } = state;
+  const { series, peso, weightHistory, profile } = state;
   console.log(weightHistory);
   const date = new Date();
-  const [getSeries, setSeries] = useState(series);
+  const [getSeries, setSeries] = useState(series.sort((a,b) => {
+    if(a.name < b.name) return -1
+    return 1
+  }));
   console.log(getSeries);
-  const [getPeso, setPeso] = useState(peso.new);
-
-
 
   let arr = 'a b c d e f g h i j l m n';
   arr = arr.toUpperCase();
@@ -44,10 +44,9 @@ function Home({ setAlert }) {
     setSeries(series);
     closeModal();
     setTitle('');
-    try{
-      
-    setName(arr[series.length + 1]);
-    } catch (e){
+    try {
+      setName(arr[series.length + 1]);
+    } catch (e) {
       console.log(e);
     }
   };
@@ -56,20 +55,19 @@ function Home({ setAlert }) {
     setAlert(false);
     dispatch({ type: 'APAGAR_COOKIES' });
     setSeries(series);
-    setPeso(0);
     setAlert(true);
   };
 
   const handleChangePeso = (e) => {
-    setPeso(e.target.value);
+    setWeight(e.target.value);
     console.log(peso);
   };
 
   const updatePeso = (e) => {
     e.preventDefault();
-    if (peso.new != getPeso) {
+    if (profile.weight != weight) {
       try {
-        dispatch({ type: 'UPDATE_PESO', payload: getPeso });
+        dispatch({ type: 'UPDATE_PESO', payload: weight });
         setAlert(true);
         console.log(weightHistory);
       } catch (error) {
@@ -85,16 +83,6 @@ function Home({ setAlert }) {
   const [isOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
 
   return (
     <>
@@ -105,19 +93,23 @@ function Home({ setAlert }) {
         <TextField
           variant="filled"
           color="secondary"
-          defaultValue={getPeso}
+          defaultValue={weight}
           onChange={handleChangePeso}
           onBlur={updatePeso}
           onSubmit={updatePeso}
           label="Peso"
+          placeholder="80"
+          type="number"
           sx={{
             width: '100px',
+          }}
+          inputProps={{
+            step: '0.01',
           }}
           InputProps={{
             endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
           }}
         />
-        <p style={{ marginTop: '3px' }}>{peso.msg}</p>
       </form>
 
       <br />

@@ -131,7 +131,8 @@ const submitForm = e => {
           <form
             onSubmit={submitForm}
             style={{
-              maxWidth: '380px'
+              maxWidth: '380px',
+              width: 'max-content',
             }}
           >
             <TextField
@@ -226,7 +227,16 @@ const submitForm = e => {
         </ModalWindow>
         <Main>
           <Routes>
-            <Route path="/" element={<Home setAlert={setAlert} />} />
+            <Route
+              path="/"
+              element={
+                <Home
+                  setAlert={setAlert}
+                  weight={weight}
+                  setWeight={setWeight}
+                />
+              }
+            />
             <Route
               path="/search"
               element={<SearchPage setAlert={setAlert} dispatch={dispatch} />}

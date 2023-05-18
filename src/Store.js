@@ -58,26 +58,12 @@ function Reducer(state, action) {
 
     case 'APAGAR_COOKIES':
       localStorage.setItem('series', []);
-      localStorage.setItem('exercises', []);
-      localStorage.setItem(
-        'peso',
-        JSON.stringify({
-          msg: 'A definir',
-          current: '',
-          new: '',
-          last: Date.now(),
-        })
-      );
-      localStorage.setItem('weightHistory', []);
 
       return {
         ...state,
         series: [],
-        exercises: [],
-        peso: { msg: 'A definir', current: '', new: '', last: Date.now() },
-        weightHistory: [],
         dialog: {
-          message: 'Dados excluídos',
+          message: 'Séries excluídas',
           title: 'Feito!',
           severety: 'success',
           open: true,
@@ -88,7 +74,7 @@ function Reducer(state, action) {
 
     case 'UPDATE_PESO':
       const novoPeso = parseFloat(action.payload);
-      const peso = state.peso.new;
+      const peso = state.profile.weight;
       const current = parseFloat(peso);
       const date = Date.now();
       let time = date - parseInt(peso.last);
@@ -112,11 +98,9 @@ function Reducer(state, action) {
         msg = 'Peso definido!';
       }
 
-      const objPeso = {
-        current: current,
-        new: novoPeso,
-        msg: msg,
-        last: date,
+      const profile = {
+        ...state.profile,
+        weight: action.payload,
       };
 
       const history = state.weightHistory;
@@ -127,15 +111,15 @@ function Reducer(state, action) {
         msg: msg,
       };
 
-      localStorage.setItem('peso', JSON.stringify(objPeso));
+      localStorage.setItem('profile', JSON.stringify(profile));
       localStorage.setItem(
         'weightHistory',
         JSON.stringify([...history, change])
       );
       return {
         ...state,
-        peso: objPeso,
         weightHistory: [...history, change],
+        profile: profile,
         dialog: {
           message: msg,
           title: 'Feito!',
@@ -262,8 +246,7 @@ function Reducer(state, action) {
       });
 
       const newEditArr = state.series.map((serie) => {
-        if (serie.id === serieToEdit)
-          return { ...serie, exercises: exercisesInSerie };
+        if (serie.id === serieToEdit) serie.exercises = exercisesInSerie;
         return serie;
       });
 
@@ -276,7 +259,7 @@ function Reducer(state, action) {
         exercises: editedExerciseList,
         dialog: {
           title: 'Exercício editado',
-          msg: 'Mudança feita!',
+          message: 'Mudança feita!',
           severety: 'success',
         },
       };

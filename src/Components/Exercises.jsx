@@ -24,16 +24,11 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
       exercise.name.replace(' ', '+');
   }
 
-  const [img, setImg] = useState(exercise.gifUrl);
-  const [name, setName] = useState(exercise.name);
-  const [sets, setSets] = useState(exercise.sets);
-  const [reps, setReps] = useState(exercise.reps);
-  const [weight, setWeight] = useState(exercise.weight);
-  const [obs, setObs] = useState(exercise.obs);
+  const [getExercise, setExercise] = useState(exercise);
   const [done, setDone] = useState(false);
   const handleDone = (e) => {
     setDone(!done);
-    console.log(exercise);
+    console.log(getExercise);
   };
 
   //menu
@@ -80,7 +75,11 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
         sx={{ width: '48px', height: '48px', alignSelf: 'center' }}
         onClick={handleDone}
       />
-      {exercise.gifUrl !== '' ? <img src={img} alt={exercise.name} /> : ''}
+      {exercise.gifUrl !== '' ? (
+        <img src={exercise.gifUrl} alt={exercise.name} />
+      ) : (
+        ''
+      )}
       <div
         style={{
           display: 'flex',
@@ -101,14 +100,14 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
             width: '100% !important',
           }}
         >
-          {sets && reps ? (
+          {exercise.sets && exercise.reps ? (
             <span>
-              {sets} x {reps}
+              {exercise.sets} x {exercise.reps}
             </span>
           ) : (
             ''
           )}
-          {weight ? <span>{weight} Kg</span> : ''}
+          {exercise.weight ? <span>{exercise.weight} Kg</span> : ''}
         </p>
         {exercise.obs != '' ? (
           <p
