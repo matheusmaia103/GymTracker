@@ -12,9 +12,12 @@ const AddFrom = ({ serie, setAlert }) => {
   const [query, setQuery] = useState('');
 
   const addToSerie = (exercise) => {
-      dispatch({ type: 'ADD_FROM_LIST', payload: { serie: serie, exercise: exercise } });
-      setAlert(true)
-      console.log(exercise.id);
+    dispatch({
+      type: 'ADD_FROM_LIST',
+      payload: { serie: serie, exercise: exercise },
+    });
+    setAlert(true);
+    console.log(exercise.id);
   };
 
   useEffect(() => {
@@ -23,6 +26,7 @@ const AddFrom = ({ serie, setAlert }) => {
         exercise.name.toLowerCase().includes(query.toLowerCase())
       )
     );
+    console.log(getExercises);
   }, [query]);
 
   return (
@@ -33,28 +37,41 @@ const AddFrom = ({ serie, setAlert }) => {
         onChange={(e) => setQuery(e.target.value)}
       />
       <List
-        style={{
+        sx={{
           alignItems: 'center',
           overflowY: 'auto',
-          overflowX: 'hidden',
+          overflowX: 'visible',
           maxHeight: '200px',
           paddingTop: '30px',
+          minWidth: '100%',
+          width: 'max-content',
+          margin: '0'
         }}
       >
         {getExercises.map((exercise) => (
-          <Exercise key={exercise.name}>
-            {exercise.gifUrl !== '' ? <img src={exercise.gifUrl} /> : ''}
-            <div style={{ width: '90%', alignItems: 'center' }}>
-              {exercise.name.lenght > 30 ? (
-                <p title={exercise.name}>{exercise.name.slice(0, 30)}...</p>
-              ) : (
-                <p>{exercise.name}</p>
-              )}
+          <p key={exercise.name}
+          style={{minWidth: '100%', display: 'flex',}}>
+            <div style={{ maxWidth: '100%', width: '100%', display: 'flex', alignItems: 'center', marginRight: '0' }}>
+            {exercise.gifUrl !== '' ? (
+              <img
+                src={exercise.gifUrl}
+                style={{
+                  maxHeight: '40px',
+                  maxWidth: '40px',
+                  borderRadius: '20px',
+                }}
+              />
+            ) : (
+              ''
+            )}
+              {exercise.name.length > 14
+                ? exercise.name.slice(0, 14) + '...'
+                : exercise.name}
             </div>
             <IconButton onClick={(e) => addToSerie(exercise)}>
               <AddRounded />
             </IconButton>
-          </Exercise>
+          </p>
         ))}
       </List>
     </form>

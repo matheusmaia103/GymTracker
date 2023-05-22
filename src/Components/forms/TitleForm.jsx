@@ -47,6 +47,7 @@ const TitleForm = ({serie, setAlert, closeModal}) => {
           variant="filled"
           color="primary"
           sx={{ textTransform: 'capitalize' }}
+          autoComplete="off"
         />
         <TextField
           label="Título da série"
@@ -54,14 +55,17 @@ const TitleForm = ({serie, setAlert, closeModal}) => {
           onChange={(e) => setTitle(e.target.value)}
           variant="filled"
           color="primary"
+          autoComplete="off"
         />
-        <p style={{ display: 'flex', justifyItems: 'end', width: 'max-content' }}>
+        <p
+          style={{ display: 'flex', justifyItems: 'end', width: 'max-content' }}
+        >
           <Button variant="contained" color="primary" type="submit">
             Salvar
           </Button>
-        <Button variant="contained" color="error" onClick={deleteSerie}>
-          <DeleteRounded /> Excluir série
-        </Button>
+          <Button variant="contained" color="error" onClick={deleteSerie}>
+            <DeleteRounded /> Excluir série
+          </Button>
         </p>
       </form>
     </>

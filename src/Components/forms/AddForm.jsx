@@ -17,11 +17,11 @@ const AddForm = ({ serie, setAlert, closeAddModal }) => {
   const addNew = (e) => {
     e.preventDefault();
     const newExercise = {
-      gifUrl: img,
-      name: name,
+      gifUrl: img.trim(),
+      name: name.trim(),
       sets: sets,
       reps: reps,
-      obs: obs,
+      obs: obs.trim(),
       video: video,
       id: Math.floor(Math.random() * 7000),
       order: order,
@@ -54,12 +54,14 @@ const AddForm = ({ serie, setAlert, closeAddModal }) => {
         type="url"
         onChange={(e) => setImg(e.target.value)}
         helperText="link de uma imagem para ilustrar"
+        autoComplete="off"
       />
       <TextField
         label="nome do exercício"
         defaultValue={name}
         required
         onChange={(e) => setName(e.target.value)}
+        autoComplete="off"
       />
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <TextField

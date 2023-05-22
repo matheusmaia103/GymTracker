@@ -24,7 +24,45 @@ const initialState = {
   },
   profile: localStorage.getItem('profile')
     ? JSON.parse(localStorage.getItem('profile'))
-    : { name: '', age: '', sex: '', weight: '', IMC: '' },
+    : { name: '', age: '', sex: '', weight: '', imc: '' },
+};
+
+const imcCount = (weight, height) => {
+  let altura = parseFloat(height);
+  let peso = parseFloat(weight);
+  let imc = altura ** 2;
+  imc = peso / imc;
+  return imc.toFixed(2);
+};
+
+const imcTest = (imc) => {
+  if (imc < 17) {
+    return 'Muito abaixo do peso';
+  }
+
+  if (imc >= 17 && imc < 18.5) {
+    return 'Abaixo do peso';
+  }
+
+  if (imc >= 18.5 && imc < 24.9) {
+    return 'Peso normal';
+  }
+
+  if (imc >= 25 && imc < 29.9) {
+    return 'Acima do peso';
+  }
+
+  if (imc >= 30 && imc < 34.9) {
+    return 'Obesidade I';
+  }
+
+  if (imc >= 35 && imc < 39.9) {
+    return 'Obesidade II (severa)';
+  }
+
+  if (imc >= 40) {
+    return 'Obesidade mórbida';
+  }
 };
 
 function Reducer(state, action) {
@@ -90,17 +128,21 @@ function Reducer(state, action) {
       time = time / 86400000;
       if (novoPeso === peso) return;
 
-      let msg = `${peso > novoPeso ? 'Emagreceu' : 'Engordou'} ${
-        peso > novoPeso ? peso - novoPeso : novoPeso - peso
-      }kg em ${time > 1 ? `${time} dias` : 'em menos de um dia'}`;
+      let msg = `${peso > novoPeso ? 'Emagreceu' : 'Engordou'} ${amount}kg em ${
+        time > 1 ? `${time} dias` : 'em menos de um dia'
+      }`;
 
       if (isNaN(current)) {
         msg = 'Peso definido!';
       }
 
+      let imc = imcCount(novoPeso, state.profile.height);
+
       const profile = {
         ...state.profile,
         weight: action.payload,
+        imc: imc,
+        imcTitle: imcTest(imc),
       };
 
       const history = state.weightHistory;
@@ -337,6 +379,19 @@ function Reducer(state, action) {
           message: `Seu perfil foi editado!`,
         },
       };
+
+    case 'RESET':
+      localStorage.setItem('series', []);
+      localStorage.setItem('exercises', []);
+      localStorage.setItem('weightHistory', []);
+      localStorage.setItem('peso', '');
+      localStorage.setItem(
+        'profile',
+        JSON.stringify({ name: '', age: '', sex: '', weight: '', imc: '' })
+      );
+
+      return initialState;
+      break;
 
     default:
       return state;

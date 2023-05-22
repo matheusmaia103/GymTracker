@@ -16,6 +16,7 @@ export const Exercise = styled.li`
   border-radius: 10px;
   margin: 8px;
   padding: 5px;
+  padding-left: 25px;
 
   img {
     width: 60px !important;

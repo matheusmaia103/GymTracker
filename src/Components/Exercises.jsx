@@ -17,7 +17,15 @@ import ModalWindow from './Modal';
 import AddForm from './forms/AddForm';
 import EditForm from './forms/EditForm';
 
-const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
+const Exercises = ({
+  exercise,
+  setAlert,
+  dispatch,
+  serie,
+  closeAddModal,
+  setLength,
+  length
+}) => {
   if (exercise.video === '') {
     exercise.video =
       'https://www.youtube.com/results?search_query=' +
@@ -28,6 +36,8 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
   const [done, setDone] = useState(false);
   const handleDone = (e) => {
     setDone(!done);
+    if (done === false) setLength(length - 1);
+    if (done === true) setLength(length + 1);
     console.log(getExercise);
   };
 
@@ -75,7 +85,7 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
         sx={{ width: '48px', height: '48px', alignSelf: 'center' }}
         onClick={handleDone}
       />
-      {exercise.gifUrl !== '' ? (
+      {exercise.gifUrl.length > 10 ? (
         <img src={exercise.gifUrl} alt={exercise.name} />
       ) : (
         ''
@@ -85,9 +95,14 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-evenly',
-          alignItems: 'center',
-          width: '90%',
-          marginLeft: '6px',
+          alignItems: 'left',
+          width: '100%',
+          marginLeft: '15px',
+          maxWidth: '100%',
+          wordWrap: 'break-word',
+          paddingTop: '10px',
+          paddingBottom: '10px',
+          overflowWrap: 'anywhere',
         }}
       >
         <p>{exercise.name}</p>
@@ -95,66 +110,82 @@ const Exercises = ({ exercise, setAlert, dispatch, serie, closeAddModal }) => {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            width: '100% !important',
+            margin: '0',
           }}
         >
-          {exercise.sets && exercise.reps ? (
-            <span>
-              {exercise.sets} x {exercise.reps}
-            </span>
-          ) : (
-            ''
-          )}
-          {exercise.weight ? <span>{exercise.weight} Kg</span> : ''}
-        </p>
-        {exercise.obs != '' ? (
-          <p
-            style={{
-              marginTop: '5px',
-              marginBottom: '5px',
-              marginLeft: '12px',
-              color: '#5a5959',
-              fontWeight: '500',
-            }}
-          >
-            {exercise.obs}
-          </p>
-        ) : (
-          ''
-        )}
-      </div>
-      <ThreeDotsMenu
-        handleClose={handleClose}
-        anchorEl={anchorEl}
-        setAnchorEl={setAnchorEl}
-      >
-        <MenuItem onClick={handleClose}>
-          <a
-            href={exercise.video}
-            target="_blank"
+          <div
             style={{
               display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
               alignItems: 'center',
-              color: 'unset',
-              textDecoration: 'none',
-              textTransform: 'none',
+              minWidth: '50% !important',
+              margin: '0',
+              width: '50%',
+              maxWidth: '100%',
             }}
           >
-            <VideoLibraryRounded color={red[500]} />
-            Ver vídeo demonstrativo
-          </a>
-        </MenuItem>
-        <MenuItem onClick={openModal}>
-          <Edit />
-          Editar
-        </MenuItem>
-        <MenuItem onClick={deleteExercise}>
-          <Delete />
-          Apagar
-        </MenuItem>
-      </ThreeDotsMenu>
+            {exercise.sets && exercise.reps ? (
+              <span className="reps">
+                {exercise.sets} x {exercise.reps}
+              </span>
+            ) : (
+              ''
+            )}
+            {exercise.weight ? (
+              <span className="weight">{exercise.weight} Kg</span>
+            ) : (
+              ''
+            )}
+          </div>
+          <ThreeDotsMenu
+            handleClose={handleClose}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+          >
+            <MenuItem onClick={handleClose}>
+              <a
+                href={exercise.video}
+                target="_blank"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'unset',
+                  textDecoration: 'none',
+                  textTransform: 'none',
+                }}
+              >
+                <VideoLibraryRounded color={red[500]} />
+                Ver vídeo demonstrativo
+              </a>
+            </MenuItem>
+            <MenuItem onClick={openModal}>
+              <Edit />
+              Editar
+            </MenuItem>
+            <MenuItem onClick={deleteExercise}>
+              <Delete />
+              Apagar
+            </MenuItem>
+          </ThreeDotsMenu>
+        </p>
+        <p
+          style={{
+            marginTop: '5px',
+            marginBottom: '5px',
+            color: '#5a5959',
+            fontWeight: '500',
+            width: '100%',
+            maxWidth: '100%',
+            wordWrap: 'break-word',
+          }}
+          className="obs"
+        >
+          {exercise.obs != '' ? exercise.obs : ''}
+        </p>
+      </div>
 
       <ModalWindow isOpen={isOpen} closeModal={closeModal}>
         <EditForm

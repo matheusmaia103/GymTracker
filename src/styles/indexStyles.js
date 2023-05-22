@@ -90,7 +90,7 @@ export const Main = styled.main`
   min-width: 80vw !important;
   max-width: 800px !important;
   width: 99%;
-  padding: 50px 35px 50px 35px;
+  padding: 50px 15px 50px 15px;
 
   display: flex;
   flex-direction: column;
@@ -209,5 +209,5 @@ export const List = styled.ul`
   align-items: center;
 
   margin-top: 20px;
-  padding: 3px;
+  padding: 2px;
 `;

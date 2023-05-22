@@ -34,6 +34,7 @@ import {
 import Serie from './Components/serie';
 import {
   AddRounded,
+  ArrowForwardRounded,
   FitnessCenterRounded,
   HomeRounded,
   ListAltRounded,
@@ -53,9 +54,6 @@ import { Store } from './Store';
 import { SeriePage } from './pages/SeriePage';
 import ExercisesPage from './pages/ExercisesPage';
 import ModalWindow from './Components/Modal';
-
-
-
 
 function App() {
   //contexts
@@ -79,19 +77,91 @@ function App() {
 
   const [name, setName] = useState(profile.name);
   const [age, setAge] = useState(parseInt(profile.age));
-  const [height, setHeight] = useState(parseFloat(profile.height));
-  const [weight, setWeight] = useState(parseFloat(profile.weight));
+  const [height, setHeight] = useState(profile.height);
+  const [weight, setWeight] = useState(profile.weight);
   const [sex, setSex] = useState(profile.sex);
-const submitForm = e => {
-  e.preventDefault()
-  let imc = weight/(height*height)
-  const profile = {name: name, age:age, height:height, sex: sex, weight: weight, IMC: imc}
-  console.log(profile);
-  dispatch({type: 'SAVE_PROFILE',  payload: profile})
-  closeModal()
-  setAlert(true)
-}
+  const [imc, setImc] = useState(profile.imc);
+  const [imcTitle, setImcTitle] = useState(profile.imcTitle);
+  const submitForm = (e) => {
+    e.preventDefault();
 
+    const imcCount = (weight, height) => {
+      let altura = parseFloat(height);
+      let peso = parseFloat(weight);
+      let imc = altura ** 2;
+      imc = peso / imc;
+      return imc.toFixed(2);
+    };
+
+    const imcTest = (imc) => {
+      if (imc < 17) {
+        return 'Muito abaixo do peso';
+      }
+
+      if (imc >= 17 && imc < 18.5) {
+        return 'Abaixo do peso';
+      }
+
+      if (imc >= 18.5 && imc < 24.9) {
+        return 'Peso normal';
+      }
+
+      if (imc >= 25 && imc < 29.9) {
+        return 'Acima do peso';
+      }
+
+      if (imc >= 30 && imc < 34.9) {
+        return 'Obesidade I';
+      }
+
+      if (imc >= 35 && imc < 39.9) {
+        return 'Obesidade II (severa)';
+      }
+
+      if (imc >= 40) {
+        return 'Obesidade mórbida';
+      }
+    };
+
+    const idealWeight = (altura, sex) => {
+      let idealWeight;
+      if (sex === 'masculino') {
+        idealWeight = parseFloat(altura) * 72.7;
+        idealWeight = idealWeight - 58;
+      } else {
+        idealWeight = parseFloat(altura) * 62.1;
+        idealWeight = idealWeight - 44.7;
+      }
+      return idealWeight.toFixed(2);
+    };
+
+    const profile = {
+      name: name,
+      age: age,
+      height: height,
+      sex: sex,
+      weight: weight,
+      imc: imcCount(weight, height),
+      imcTitle: imcTest(imc),
+      idealWeight: idealWeight(height, sex),
+    };
+    console.log(profile);
+    console.log('peso');
+    console.log(imc);
+    dispatch({ type: 'SAVE_PROFILE', payload: profile });
+    closeModal();
+    setAlert(true);
+  };
+
+  const handleReset = () => {
+    const sure = window.confirm(
+      `Tem certeza que deseja apagar todos os dados do app?`
+    );
+    if (sure) {
+      dispatch({ type: 'RESET' });
+      window.location.reload();
+    }
+  };
 
   return (
     <Body>
@@ -133,6 +203,8 @@ const submitForm = e => {
             style={{
               maxWidth: '380px',
               width: 'max-content',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <TextField
@@ -140,6 +212,7 @@ const submitForm = e => {
               defaultValue={name}
               onChange={(e) => setName(e.target.value)}
               fullWidth
+              autoComplete="off"
               required
             />
             <p
@@ -155,6 +228,9 @@ const submitForm = e => {
                 onChange={(e) => setAge(e.target.value)}
                 placeholder="20"
                 type="number"
+                inputProps={{
+                  step: '1',
+                }}
                 style={{ maxWidth: '100px' }}
                 required
               />
@@ -162,12 +238,15 @@ const submitForm = e => {
                 label="altura"
                 defaultValue={height}
                 onChange={(e) => setHeight(e.target.value)}
-                placeholder="172"
+                placeholder="1,72"
                 type="number"
+                inputProps={{
+                  step: '0.01',
+                }}
                 style={{ maxWidth: '120px' }}
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">cm</InputAdornment>
+                    <InputAdornment position="end">m</InputAdornment>
                   ),
                 }}
                 required
@@ -176,8 +255,12 @@ const submitForm = e => {
                 label="Peso"
                 defaultValue={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                placeholder="77.60"
-                style={{ maxWidth: '120px' }}
+                style={{ maxWidth: '130px' }}
+                placeholder="77,60"
+                type="number"
+                inputProps={{
+                  step: '0.01',
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">Kg</InputAdornment>
@@ -208,6 +291,20 @@ const submitForm = e => {
                 />
               </RadioGroup>
             </FormControl>
+
+            {!isNaN(profile.imc) ? (
+              <>
+                <p style={{ display: 'flex', alignItems: 'center' }}>
+                  IMC: {profile.imc} <ArrowForwardRounded /> {profile.imcTitle}
+                </p>
+                <p style={{ display: 'flex', alignItems: 'center' }}>
+                  Seu peso ideal <ArrowForwardRounded /> {profile.idealWeight}{' '}
+                  kg
+                </p>
+              </>
+            ) : (
+              ''
+            )}
             <p
               style={{
                 textAlign: 'right',
@@ -215,6 +312,15 @@ const submitForm = e => {
                 color: 'white !important',
               }}
             >
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ color: 'white !important' }}
+                onClick={handleReset}
+              >
+                Resetar app
+              </Button>
+
               <Button
                 type="submit"
                 variant="contained"

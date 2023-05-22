@@ -23,12 +23,12 @@ const EditForm = ({
   const editExercise = (e) => {
     e.preventDefault();
     const editedExercise = {
-      gifUrl: img,
-      name: name,
+      gifUrl: img.trim(),
+      name: name.trim(),
       sets: sets,
       reps: reps,
-      obs: obs,
-      video: video,
+      obs: obs.trim(),
+      video: video.trim(),
       id: exercise.id,
       weight: weight,
       order: order,
@@ -70,6 +70,7 @@ const EditForm = ({
         defaultValue={name}
         required
         onChange={(e) => setName(e.target.value)}
+        autoComplete="off"
       />
       <span
         style={{
@@ -102,7 +103,7 @@ const EditForm = ({
           step="0.01"
           onChange={(e) => setWeight(e.target.value)}
           inputProps={{
-            step: '0.25'
+            step: '0.25',
           }}
           InputProps={{
             endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
@@ -116,6 +117,7 @@ const EditForm = ({
         type="url"
         onChange={(e) => setImg(e.target.value)}
         helperText="link de uma imagem para ilustrar"
+        autoComplete="off"
       />
       <TextField
         label="Observação"
@@ -123,13 +125,11 @@ const EditForm = ({
         type="text"
         onChange={(e) => setObs(e.target.value)}
         helperText="Informações adicionais"
+        autoComplete="off"
       />
-      <div style={{ display: 'inline', width: '100%' }}>
+      <div style={{ display: 'flex', width: '100%', justifyContent: 'end' }}>
         <Button variant="contained" color="primary" type="submit">
           Atualizar
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={closeAddModal}>
-          Fechar
         </Button>
       </div>
     </form>

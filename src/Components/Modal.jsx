@@ -6,7 +6,7 @@ const ModalWindow = ({isOpen, closeModal, children}) =>{
 const style = {
   maxWidth: 'fit-content',
   position: 'absolute',
-  top: '50%',
+  top: '38%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',

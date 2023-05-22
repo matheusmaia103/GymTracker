@@ -40,9 +40,12 @@ export const SeriePage = ({ setAlert }) => {
   const { state, dispatch } = useContext(Store);
   const { exercises, series } = state;
   const [serie, setSerie] = useState(
-    series.filter((serie) => (serie.id == id))[0]
+    series.filter((serie) => serie.id == id)[0]
   );
-  console.clear();
+  const [length, setLength] = useState(serie.exercises.length);
+  useEffect(() =>{
+    setLength(serie.exercises.length);
+  }, [serie.exercises])
   console.log(serie);
   //Title modal
   const [isOpen, setModalOpen] = useState(false);
@@ -122,6 +125,19 @@ export const SeriePage = ({ setAlert }) => {
       <Button variant="outlined" color="primary" onClick={openAddModal}>
         <AddRounded /> Adicionar exercício
       </Button>
+
+      <p
+        style={{
+          textAlign: 'left',
+          color: 'black',
+          width: '92%',
+          fontSize: '22px',
+        }}
+      >
+        {serie.exercises.length > 0
+          ? length === 0 ? 'Tudo feito!' : `${length} exercícios`
+          : 'Ainda nenhum exercício'}
+      </p>
       <List>
         {serie.exercises.map((exercise) => (
           <Exercises
@@ -130,6 +146,8 @@ export const SeriePage = ({ setAlert }) => {
             dispatch={dispatch}
             serie={serie}
             closeAddModal={closeAddModal}
+            length={length}
+            setLength={setLength}
           />
         ))}
       </List>
@@ -175,7 +193,7 @@ export const SeriePage = ({ setAlert }) => {
           id="modal-modal-description"
         >
           {exercises.length > 0 ? (
-            <AddFrom serie={serie} setAlert={setAlert}/>
+            <AddFrom serie={serie} setAlert={setAlert} />
           ) : (
             <p style={{ color: '#444444', textAlign: 'center' }}>
               Você ainda não salvou nenhum exercício

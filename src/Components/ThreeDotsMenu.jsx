@@ -4,7 +4,7 @@ import { Button, Fade, IconButton, Menu, MenuItem } from '@mui/material'
 import React, { Children } from 'react'
 
 const ThreeDotsMenu = ({ children, anchorEl, setAnchorEl }) => {
-  const open = anchorEl;
+  const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
