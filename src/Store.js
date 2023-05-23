@@ -65,6 +65,18 @@ const imcTest = (imc) => {
   }
 };
 
+const idealWeight = (altura, sex) => {
+  let idealWeight;
+  if (sex === 'masculino') {
+    idealWeight = parseFloat(altura) * 72.7;
+    idealWeight = idealWeight - 58;
+  } else {
+    idealWeight = parseFloat(altura) * 62.1;
+    idealWeight = idealWeight - 44.7;
+  }
+  return idealWeight.toFixed(2);
+};
+
 function Reducer(state, action) {
   switch (action.type) {
     case 'NOVA_SERIE':
@@ -142,7 +154,7 @@ function Reducer(state, action) {
         ...state.profile,
         weight: action.payload,
         imc: imc,
-        imcTitle: imcTest(imc),
+        imcTitle: imcTest(parseFloat(imc)),
       };
 
       const history = state.weightHistory;
@@ -370,15 +382,30 @@ function Reducer(state, action) {
       break;
 
     case 'SAVE_PROFILE':
-      localStorage.setItem('profile', JSON.stringify(action.payload));
+      const profileObj = action.payload;
+      let imcNew = imcCount(
+        parseFloat(profileObj.weight),
+        parseFloat(profileObj.height)
+      );
+      let newImcTitle = imcTest(parseFloat(imcNew));
+      let newIdealWeight = idealWeight(
+        parseFloat(profileObj.height),
+        profileObj.sex
+      );
+      profileObj.imc = imcNew;
+      profileObj.imcTitle = newImcTitle;
+      profileObj.idealWeight = newIdealWeight;
+
+      localStorage.setItem('profile', JSON.stringify(profileObj));
       return {
         ...state,
-        profile: action.payload,
+        profile: profileObj,
         dialog: {
           title: 'Feito!',
-          message: `Seu perfil foi editado!`,
+          message: `Seu IMC é: ${imcNew} => ${newImcTitle}`,
         },
       };
+      break;
 
     case 'RESET':
       localStorage.setItem('series', []);

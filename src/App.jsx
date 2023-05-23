@@ -83,6 +83,8 @@ function App() {
   const [imc, setImc] = useState(profile.imc);
   const [imcTitle, setImcTitle] = useState(profile.imcTitle);
   const submitForm = (e) => {
+    setHeight(parseFloat(height).toFixed(2));
+    setWeight(parseFloat(weight).toFixed(2));
     e.preventDefault();
 
     const imcCount = (weight, height) => {
@@ -141,13 +143,8 @@ function App() {
       height: height,
       sex: sex,
       weight: weight,
-      imc: imcCount(weight, height),
-      imcTitle: imcTest(imc),
-      idealWeight: idealWeight(height, sex),
     };
     console.log(profile);
-    console.log('peso');
-    console.log(imc);
     dispatch({ type: 'SAVE_PROFILE', payload: profile });
     closeModal();
     setAlert(true);
@@ -292,7 +289,7 @@ function App() {
               </RadioGroup>
             </FormControl>
 
-            {!isNaN(profile.imc) ? (
+            {!isNaN(profile.imc) && profile.imc !== '' ? (
               <>
                 <p style={{ display: 'flex', alignItems: 'center' }}>
                   IMC: {profile.imc} <ArrowForwardRounded /> {profile.imcTitle}
